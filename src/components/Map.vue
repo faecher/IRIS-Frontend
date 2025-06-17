@@ -5,10 +5,12 @@ import {Marker} from "../ui/marker.ts";
 import {onMounted} from 'vue'
 import {useSettingsStore} from "../store/settings.ts";
 import {colorful} from "@versatiles/style";
+import {useConnectionStore} from "../store/connection.ts";
 
 let markers = [];
 
 const settingsStore = useSettingsStore();
+const connectionStore = useConnectionStore();
 
 // Define the styles
 const vectorTilesStyle = colorful({
