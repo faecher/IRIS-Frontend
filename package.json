@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@versatiles/style": "^5.6.0",
     "maplibre-gl": "^5.5.0",
     "pinia": "^3.0.2",
     "pinia-plugin-persistedstate": "^4.2.0",
