@@ -133,6 +133,8 @@ export class Marker extends Evented {
     _anchor: PositionAnchor;
     _offset: Point;
     _element: HTMLElement;
+    _labelElement: HTMLElement;
+    _statusElement: HTMLElement;
     _popup: Popup;
     _lngLat: LngLat;
     _pos: Point;
@@ -185,6 +187,9 @@ export class Marker extends Evented {
 
             const label = DOM.create('div');
             const statusIndicator = DOM.create('div');
+
+            this._labelElement = label;
+            this._statusElement = statusIndicator;
 
             // Set the text
             label.textContent = this._label;
@@ -812,4 +817,45 @@ export class Marker extends Evented {
         }
         return this;
     }
+
+    /**
+     * Get the label
+     */
+    getLabel(): string {
+        return this._label;
+    }
+
+    /**
+     * Set label
+     * @param label String to set label to
+     */
+    setLabel(label: string): this {
+        this._label = label;
+        this._labelElement.textContent = label;
+        return this;
+    }
+
+    getStatus(): MarkerStatus | undefined {
+        return this._status;
+    }
+
+    setStatus(status: MarkerStatus | undefined): this {
+        // Remove the previous css class
+        if (this._status === undefined) {
+            this._statusElement.classList.remove("marker-unknown")
+        } else {
+            this._statusElement.classList.remove('marker-s' + this._status.toString())
+        }
+        // Set the new status
+        this._status = status;
+        // Update all dependencies
+        this._statusElement.textContent = this._status?.toString() ?? "?";
+        if (this._status === undefined) {
+            this._statusElement.classList.add("marker-unknown")
+        } else {
+            this._statusElement.classList.add('marker-s' + this._status.toString())
+        }
+        return this;
+    }
+
 }
