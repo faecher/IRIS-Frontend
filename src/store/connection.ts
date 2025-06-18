@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import { socket } from "../socket";
-import type {Ref} from "vue";
-import {ref} from "vue";
-import type {Tracker} from "../models/tracker.ts";
+import { ref, type Ref } from "vue";
+import type { Tracker } from "../models/tracker.ts";
+
 export const useConnectionStore = defineStore("connection", () => {
     const isConnected: Ref<boolean> = ref(true);
     const markers: Ref<Tracker[]> = ref([]);
@@ -17,7 +17,7 @@ export const useConnectionStore = defineStore("connection", () => {
         });
 
         socket.on("getTrackerData", (...args) => {
-            console.log(args)
+            markers.value = args[0].devices;
         })
     }
 
@@ -25,5 +25,5 @@ export const useConnectionStore = defineStore("connection", () => {
         socket.connect();
     }
 
-    return { isConnected, connect, bindEvents }
+    return { isConnected, connect, bindEvents, markers }
 });

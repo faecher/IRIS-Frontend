@@ -6,5 +6,5 @@ export interface Tracker {
     battery: number
     long: number
     lat: number
-    lastUpdated: string
+    lastUpdated: number
 }

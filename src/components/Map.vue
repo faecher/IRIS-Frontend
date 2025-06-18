@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import 'maplibre-gl/dist/maplibre-gl.css'
-import {Map, NavigationControl, type StyleSpecification} from 'maplibre-gl'
-import {Marker} from "../ui/marker.ts";
-import {onMounted} from 'vue'
-import {useSettingsStore} from "../store/settings.ts";
-import {colorful} from "@versatiles/style";
-import {useConnectionStore} from "../store/connection.ts";
+import { Map, NavigationControl, type StyleSpecification } from 'maplibre-gl'
+import { Marker } from "../ui/marker.ts";
+import { onMounted, watch } from 'vue'
+import { useSettingsStore } from "../store/settings.ts";
+import { colorful } from "@versatiles/style";
+import { useConnectionStore } from "../store/connection.ts";
 
 let markers = [];
 
@@ -60,6 +60,33 @@ onMounted(() => {
 
   let control = new NavigationControl()
   map.addControl(control)
+
+  watch(() => connectionStore.markers, function() {
+    console.log("Marker data updated!")
+    for (const item of connectionStore.markers) {
+      if (markers.some(e => e.getEUI() === item.deviceEUI)) {
+        // We found at least one object that we're looking for!
+        console.log("We already have this item")
+        let marker = markers.find(e => e.getEUI() === item.deviceEUI)
+
+        // Update label if required
+        if (marker.getName() !== item.name) {
+          marker.setName(item.name)
+        }
+
+        // Update position
+        marker.setLngLat([item.long, item.lat]);
+
+      } else {
+        // Create a new marker otherwise
+        let marker = new Marker({label: item.name, eui: item.deviceEUI})
+        marker.setLngLat([item.long, item.lat])
+        marker.addTo(map)
+        markers.push(marker)
+      }
+    }
+  });
+
 })
 </script>
 

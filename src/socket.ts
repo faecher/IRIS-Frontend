@@ -6,7 +6,3 @@ socket.on("connect", () => {
     // Determine connect or reconnect
     console.log("Connected")
 });
-
-socket.on("update", (...args) => {
-    console.log(args)
-});

@@ -93,6 +93,8 @@ type MarkerOptions = {
 
     label?: string;
 
+    eui?: string;
+
     status?: MarkerStatus | undefined;
 };
 
@@ -157,6 +159,7 @@ export class Marker extends Evented {
     _subpixelPositioning: boolean;
     _status: MarkerStatus | undefined;
     _label: string;
+    _eui: string;
 
     /**
      * @param options - the options
@@ -178,6 +181,7 @@ export class Marker extends Evented {
 
         this._label = options && options.label || 'Marker';
         this._status = options && options.status || undefined;
+        this._eui = options && options.eui || window.crypto.randomUUID();
 
         if (!options || !options.element) {
             this._defaultMarker = true;
@@ -856,6 +860,15 @@ export class Marker extends Evented {
             this._statusElement.classList.add('marker-s' + this._status.toString())
         }
         return this;
+    }
+
+    getEUI(): string {
+        return this._eui;
+    }
+
+    setEUI(EUI: string): this {
+        this._eui = EUI;
+        return this
     }
 
 }
