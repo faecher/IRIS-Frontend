@@ -6,8 +6,9 @@ import { onMounted, watch } from 'vue'
 import { useSettingsStore } from "../store/settings.ts";
 import { colorful } from "@versatiles/style";
 import { useConnectionStore } from "../store/connection.ts";
+import {TrackerControl} from "../ui/tracker_control.ts";
 
-let markers = [];
+let markers: Marker[] = [];
 
 const settingsStore = useSettingsStore();
 const connectionStore = useConnectionStore();
@@ -61,6 +62,9 @@ onMounted(() => {
   let control = new NavigationControl()
   map.addControl(control)
 
+  let trackerControl = new TrackerControl()
+  map.addControl(trackerControl, 'top-left')
+
   watch(() => connectionStore.markers, function() {
     console.log("Marker data updated!")
     for (const item of connectionStore.markers) {
@@ -70,14 +74,15 @@ onMounted(() => {
         let marker = markers.find(e => e.getEUI() === item.deviceEUI)
 
         // Update label if required
-        if (marker.getName() !== item.name) {
-          marker.setName(item.name)
+        if (marker?.getLabel() !== item.name) {
+          marker?.setLabel(item.name)
         }
 
         // Update position
-        marker.setLngLat([item.long, item.lat]);
+        marker?.setLngLat([item.long, item.lat]);
 
       } else {
+        console.log("Creating marker!")
         // Create a new marker otherwise
         let marker = new Marker({label: item.name, eui: item.deviceEUI})
         marker.setLngLat([item.long, item.lat])
