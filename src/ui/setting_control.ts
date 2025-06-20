@@ -1,24 +1,26 @@
 import type { IControl, Map } from "maplibre-gl";
-import {DOM} from "../util/dom.ts";
+import { DOM } from "../util/dom.ts";
+import router from "../router.ts";
 
-export class TrackerControl implements IControl {
+export class SettingControl implements IControl {
 
     _map: Map;
     _container: HTMLElement;
 
-    _trackerListButton: HTMLButtonElement;
+    _styleButton: HTMLButtonElement;
 
     constructor() {
         this._container = DOM.create('div', 'maplibregl-ctrl maplibregl-ctrl-group');
         this._container.addEventListener('contextmenu', (e) => e.preventDefault());
 
-        this._trackerListButton = this._createButton('maplibregl-ctrl-tracker-settings', (e) => {
-            console.log("Pressed!");
+        this._styleButton = this._createButton('maplibregl-ctrl-settings', (e) => {
+            // Toggle the value of the store
+            router.push('/settings');
         });
-        DOM.create('span', 'maplibregl-ctrl-icon', this._trackerListButton).setAttribute('aria-hidden', 'true');
+        DOM.create('span', 'maplibregl-ctrl-icon', this._styleButton).setAttribute('aria-hidden', 'true');
     }
 
-    onAdd(map: Map){
+    onAdd(map: Map) {
         this._map = map;
 
         return this._container;
@@ -33,6 +35,10 @@ export class TrackerControl implements IControl {
         a.type = 'button';
         a.addEventListener('click', fn);
         return a;
+    }
+
+    getDefaultPosition(): ControlPosition {
+        return 'bottom-right';
     }
 
 }

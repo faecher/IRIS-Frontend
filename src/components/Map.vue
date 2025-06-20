@@ -6,7 +6,8 @@ import { onMounted, watch } from 'vue'
 import { useSettingsStore } from "../store/settings.ts";
 import { colorful } from "@versatiles/style";
 import { useConnectionStore } from "../store/connection.ts";
-import {TrackerControl} from "../ui/tracker_control.ts";
+import { SettingControl } from "../ui/setting_control.ts";
+import { StyleControl } from "../ui/style_control.ts";
 
 let markers: Marker[] = [];
 
@@ -62,15 +63,25 @@ onMounted(() => {
   let control = new NavigationControl()
   map.addControl(control)
 
-  let trackerControl = new TrackerControl()
-  map.addControl(trackerControl, 'top-left')
+  let styleControl = new StyleControl()
+  map.addControl(styleControl, 'bottom-right')
+
+  let settingControl = new SettingControl()
+  map.addControl(settingControl, 'bottom-right')
+
+  watch(() => settingsStore.useVectorTiles, function () {
+      if (settingsStore.useVectorTiles) {
+        map.setStyle(vectorTilesStyle)
+      } else {
+        map.setStyle(osmStyle)
+      }
+  })
 
   watch(() => connectionStore.markers, function() {
     console.log("Marker data updated!")
     for (const item of connectionStore.markers) {
       if (markers.some(e => e.getEUI() === item.deviceEUI)) {
         // We found at least one object that we're looking for!
-        console.log("We already have this item")
         let marker = markers.find(e => e.getEUI() === item.deviceEUI)
 
         // Update label if required
@@ -82,7 +93,6 @@ onMounted(() => {
         marker?.setLngLat([item.long, item.lat]);
 
       } else {
-        console.log("Creating marker!")
         // Create a new marker otherwise
         let marker = new Marker({label: item.name, eui: item.deviceEUI})
         marker.setLngLat([item.long, item.lat])

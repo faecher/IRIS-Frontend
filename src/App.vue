@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Map from "./components/Map.vue";
-import {useConnectionStore} from "./store/connection.ts";
-import {onMounted} from "vue";
+import { RouterView } from "vue-router";
+import { useConnectionStore } from "./store/connection.ts";
+import { onMounted } from "vue";
 
 const connectionStore = useConnectionStore();
 
@@ -17,7 +17,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <Map />
+  <RouterView />
 </template>
 
 <style scoped>
