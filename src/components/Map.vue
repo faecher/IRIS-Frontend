@@ -85,8 +85,17 @@ onMounted(() => {
         let marker = markers.find(e => e.getEUI() === item.deviceEUI)
 
         // Update label if required
-        if (marker?.getLabel() !== item.name) {
-          marker?.setLabel(item.name)
+        if (item.resource === null) {
+          if (marker?.getLabel() !== item.name) {
+            marker?.setLabel(item.name)
+          }
+        } else {
+          if (marker?.getLabel() !== item.resource.name) {
+            marker?.setLabel(item.resource.name)
+          }
+
+          // Update status
+          marker?.setStatus(item.resource.status)
         }
 
         // Update position
@@ -94,10 +103,18 @@ onMounted(() => {
 
       } else {
         // Create a new marker otherwise
-        let marker = new Marker({label: item.name, eui: item.deviceEUI})
-        marker.setLngLat([item.long, item.lat])
-        marker.addTo(map)
-        markers.push(marker)
+        if (item.resource === null) {
+          let marker = new Marker({label: item.name, eui: item.deviceEUI})
+          marker.setLngLat([item.long, item.lat])
+          marker.addTo(map)
+          markers.push(marker)
+        } else {
+          let marker = new Marker({label: item.resource.name, eui: item.deviceEUI})
+          marker.setStatus(item.resource.status)
+          marker.setLngLat([item.long, item.lat])
+          marker.addTo(map)
+          markers.push(marker)
+        }
       }
     }
   });

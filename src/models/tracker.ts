@@ -7,4 +7,13 @@ export interface Tracker {
     long: number
     lat: number
     lastUpdated: number
+    resource: null | Resource
+}
+
+export interface Resource {
+    id: number
+    uid: string
+    name: string
+    type: string
+    status: number
 }
