@@ -20,7 +20,7 @@ type Alignment = 'map' | 'viewport' | 'auto';
 /**
  * Custom class for setting the status of the marker
  */
-type MarkerStatus = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export type MarkerStatus = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 /**
  * The {@link Marker} options object
@@ -188,6 +188,7 @@ export class Marker extends Evented {
             this._element = DOM.create('div');
 
             this._element.classList.add('marker-box');
+            this._element.classList.add('cursor-pointer');
 
             const label = DOM.create('div');
             const statusIndicator = DOM.create('div');
@@ -277,6 +278,14 @@ export class Marker extends Evented {
 
         this.setDraggable(this._draggable);
         this._update();
+
+        this._element.addEventListener('click', () => {
+            if (this._pos !== undefined) {
+                map.flyTo({
+                    center: this._lngLat
+                })
+            }
+        })
 
         // If we attached the `click` listener to the marker element, the popup
         // would close once the event propagated to `map` due to the

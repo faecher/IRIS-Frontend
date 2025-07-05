@@ -1,3 +1,4 @@
+import { type MarkerStatus } from '../ui/marker.ts'
 
 export interface Tracker {
     id: number
@@ -15,5 +16,5 @@ export interface Resource {
     uid: string
     name: string
     type: string
-    status: number
+    status: MarkerStatus
 }

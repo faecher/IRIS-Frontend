@@ -50,6 +50,47 @@ const osmStyle: StyleSpecification = {
   ]
 }
 
+function updateMarkers(map: Map) {
+  for (const item of connectionStore.markers) {
+    if (markers.some(e => e.getEUI() === item.deviceEUI)) {
+      // We found at least one object that we're looking for!
+      let marker = markers.find(e => e.getEUI() === item.deviceEUI)
+
+      // Update label if required
+      if (item.resource === null) {
+        if (marker?.getLabel() !== item.name) {
+          marker?.setLabel(item.name)
+        }
+      } else {
+        if (marker?.getLabel() !== item.resource.name) {
+          marker?.setLabel(item.resource.name)
+        }
+
+        // Update status
+        marker?.setStatus(item.resource.status)
+      }
+
+      // Update position
+      marker?.setLngLat([item.long, item.lat]);
+
+    } else {
+      // Create a new marker otherwise
+      if (item.resource === null) {
+        let marker = new Marker({label: item.name, eui: item.deviceEUI})
+        marker.setLngLat([item.long, item.lat])
+        marker.addTo(map)
+        markers.push(marker)
+      } else {
+        let marker = new Marker({label: item.resource.name, eui: item.deviceEUI})
+        marker.setStatus(item.resource.status)
+        marker.setLngLat([item.long, item.lat])
+        marker.addTo(map)
+        markers.push(marker)
+      }
+    }
+  }
+}
+
 onMounted(() => {
   const style = settingsStore.useVectorTiles ? vectorTilesStyle : osmStyle
 
@@ -77,46 +118,23 @@ onMounted(() => {
       }
   })
 
+  // Load all markers initially
+  updateMarkers(map)
+
+  // Note: Deep watching is required as vue does not detect the changes in the list
+  watch(() => connectionStore.flyTo, function () {
+    if (connectionStore.flyTo.length > 0) {
+      map.flyTo({
+        center: connectionStore.flyTo[0]
+      })
+      // Remove the first element from the list
+      connectionStore.flyTo.shift();
+    }
+  }, { deep: true })
+
   watch(() => connectionStore.markers, function() {
     console.log("Marker data updated!")
-    for (const item of connectionStore.markers) {
-      if (markers.some(e => e.getEUI() === item.deviceEUI)) {
-        // We found at least one object that we're looking for!
-        let marker = markers.find(e => e.getEUI() === item.deviceEUI)
-
-        // Update label if required
-        if (item.resource === null) {
-          if (marker?.getLabel() !== item.name) {
-            marker?.setLabel(item.name)
-          }
-        } else {
-          if (marker?.getLabel() !== item.resource.name) {
-            marker?.setLabel(item.resource.name)
-          }
-
-          // Update status
-          marker?.setStatus(item.resource.status)
-        }
-
-        // Update position
-        marker?.setLngLat([item.long, item.lat]);
-
-      } else {
-        // Create a new marker otherwise
-        if (item.resource === null) {
-          let marker = new Marker({label: item.name, eui: item.deviceEUI})
-          marker.setLngLat([item.long, item.lat])
-          marker.addTo(map)
-          markers.push(marker)
-        } else {
-          let marker = new Marker({label: item.resource.name, eui: item.deviceEUI})
-          marker.setStatus(item.resource.status)
-          marker.setLngLat([item.long, item.lat])
-          marker.addTo(map)
-          markers.push(marker)
-        }
-      }
-    }
+    updateMarkers(map)
   });
 
 })

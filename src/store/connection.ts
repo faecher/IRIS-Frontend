@@ -2,10 +2,13 @@ import { defineStore } from "pinia";
 import { socket } from "../socket";
 import { ref, type Ref } from "vue";
 import type { Tracker } from "../models/tracker.ts";
+import type {LngLatLike} from "maplibre-gl";
 
 export const useConnectionStore = defineStore("connection", () => {
     const isConnected: Ref<boolean> = ref(true);
     const markers: Ref<Tracker[]> = ref([]);
+
+    const flyTo: Ref<LngLatLike[]> = ref([]);
 
     function bindEvents() {
         socket.on("connect", () => {
@@ -25,5 +28,5 @@ export const useConnectionStore = defineStore("connection", () => {
         socket.connect();
     }
 
-    return { isConnected, connect, bindEvents, markers }
+    return { isConnected, connect, bindEvents, markers, flyTo }
 });

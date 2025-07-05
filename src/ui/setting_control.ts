@@ -1,4 +1,4 @@
-import type { IControl, Map } from "maplibre-gl";
+import type {ControlPosition, IControl, Map} from "maplibre-gl";
 import { DOM } from "../util/dom.ts";
 import router from "../router.ts";
 
@@ -13,7 +13,7 @@ export class SettingControl implements IControl {
         this._container = DOM.create('div', 'maplibregl-ctrl maplibregl-ctrl-group');
         this._container.addEventListener('contextmenu', (e) => e.preventDefault());
 
-        this._styleButton = this._createButton('maplibregl-ctrl-settings', (e) => {
+        this._styleButton = this._createButton('maplibregl-ctrl-settings', () => {
             // Toggle the value of the store
             router.push('/settings');
         });
