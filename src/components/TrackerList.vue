@@ -31,7 +31,7 @@ function flyToMarker(item: Tracker) {
           <img v-else src="/arrow_down.svg" alt="Arrow Down" />
         </button>
       </div>
-      <div v-if="showList">
+      <div v-if="showList" class="overflow-auto max-h-full">
         <div v-for="tracker in connectionStore.markers" class="w-full flex pt-1 pb-1 pl-2 pr-2 hover:bg-gray-100" @click="flyToMarker(tracker)">
           <div>
             <p v-if="tracker.resource === null" class="select-none">{{ tracker.name }}</p>
