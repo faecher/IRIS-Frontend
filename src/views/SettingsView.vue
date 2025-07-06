@@ -5,7 +5,7 @@ import StringInput from "../components/StringInput.vue";
 import base from "../api/base.ts";
 import axios from "axios";
 import type {Operation} from "../models/operation.ts";
-import type {Resource, Tracker} from "../models/tracker.ts";
+import type {Tracker} from "../models/tracker.ts";
 import TrackerListItem from "../components/TrackerListItem.vue";
 
 const hasError: Ref<boolean> = ref<boolean>(false);
@@ -19,7 +19,6 @@ const selectedOperation: Ref<string> = ref<string>("");
 
 const operations: Ref<Operation[]> = ref<Operation[]>([]);
 const trackers: Ref<Tracker[]> = ref<Tracker[]>([]);
-const resources: Ref<Resource[]> = ref<Resource[]>([]);
 
 function addError(msg: string) {
   hasError.value = true;
@@ -55,7 +54,7 @@ function loadMCPConfig() {
     }
 
   }).catch(function () {
-    addError("Cannot reach backend!")
+    addError("Das Backend kann nicht erreicht werden!")
     console.log("Can't query data!")
   })
 }
@@ -108,7 +107,7 @@ function selectOperation(item: Operation) {
     if (e.status === 400) {
       addError(e.response?.data?.detail)
     } else {
-      addError("Cannot reach backend!")
+      addError("Das Backend kann nicht erreicht werden!")
     }
   })
 }
@@ -129,7 +128,7 @@ function deselectOperation(item: Operation) {
     if (e.status === 400) {
       addError(e.response?.data?.detail)
     } else {
-      addError("Cannot reach backend!")
+      addError("Das Backend kann nicht erreicht werden!")
     }
   })
 }
@@ -151,7 +150,7 @@ function handleMCPSubmit() {
     if (e.status === 400) {
       addError(e.response?.data?.detail)
     } else {
-      addError("Cannot reach backend!")
+      addError("Das Backend kann nicht erreicht werden!")
     }
   })
 }
@@ -177,7 +176,7 @@ onMounted(() => {
          class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
          role="alert">
       <div>
-        <span class="font-medium">An error occured!</span>
+        <span class="font-medium">Ein Fehler ist aufgetreten!</span>
         <ul class="mt-1.5 list-disc list-inside">
           <li v-for="error in errors">{{ error }}</li>
         </ul>
