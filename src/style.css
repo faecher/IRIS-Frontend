@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 .marker-box {
-  z-index: 10;
   position: absolute;
   border-radius: 0.4em;
   display: flex;
