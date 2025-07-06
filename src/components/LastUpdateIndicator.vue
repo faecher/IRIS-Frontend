@@ -8,7 +8,7 @@ const props = defineProps({
   }
 })
 
-const currentTime: Ref<Number> = ref(Date.now());
+const currentTime: Ref<number> = ref(Date.now());
 let interval: any;
 
 function updateTime() {
