@@ -24,9 +24,5 @@ export const useConnectionStore = defineStore("connection", () => {
         })
     }
 
-    function connect() {
-        socket.connect();
-    }
-
-    return { isConnected, connect, bindEvents, markers, flyTo }
+    return { isConnected, bindEvents, markers, flyTo }
 });

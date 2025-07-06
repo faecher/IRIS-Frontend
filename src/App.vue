@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import { useConnectionStore } from "./store/connection.ts";
-import { onMounted } from "vue";
+import { socket } from "./socket.ts";
 
 const connectionStore = useConnectionStore();
 
-onMounted(() => {
-  // Try connection on application start
-  connectionStore.connect();
+// remove any existing listeners
+socket.off();
 
-  if(connectionStore.isConnected) {
-    connectionStore.bindEvents()
-  }
-})
+connectionStore.bindEvents()
 
 </script>
 
