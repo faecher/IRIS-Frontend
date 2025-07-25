@@ -1,8 +1,9 @@
 import { defineStore } from "pinia";
-import { socket } from "../socket";
 import { ref, type Ref } from "vue";
 import type { Tracker } from "../models/tracker.ts";
 import type {LngLatLike} from "maplibre-gl";
+import axios from "axios";
+import base from "../api/base.ts";
 
 export const useConnectionStore = defineStore("connection", () => {
     const isConnected: Ref<boolean> = ref(true);
@@ -10,19 +11,29 @@ export const useConnectionStore = defineStore("connection", () => {
 
     const flyTo: Ref<LngLatLike[]> = ref([]);
 
-    function bindEvents() {
-        socket.on("connect", () => {
-            isConnected.value = true;
-            socket.emit("requestTrackerData", "");
-        });
-        socket.on("disconnect", () => {
-            isConnected.value = false;
-        });
+    let interval: any;
 
-        socket.on("getTrackerData", (...args) => {
-            markers.value = args[0].devices;
+    function updateData() {
+        axios.get(base.root_url + '/api/tracker/',{
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            timeout: 500
+        }).then(function (response) {
+            // Reload the data
+            markers.value = response.data;
+        }).catch(function (e) {
+            console.log("Cannot get data");
         })
     }
 
-    return { isConnected, bindEvents, markers, flyTo }
+    function bindEvents() {
+        interval = setInterval(updateData, 2500)
+    }
+
+    function clearEvents() {
+        clearInterval(interval)
+    }
+
+    return { isConnected, bindEvents, clearEvents, markers, flyTo }
 });
