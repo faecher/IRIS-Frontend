@@ -76,6 +76,7 @@ function loadMCPOperations() {
 }
 
 function loadTrackers() {
+  trackers.value = [];
   // Try loading data
   axios.get(base.root_url + '/api/tracker/', {
     headers: {
@@ -222,7 +223,7 @@ onMounted(() => {
     <h2 class="font-bold text-2xl mb-2">Tracker-Mapping</h2>
     <div v-if="selectedOperation">
       <div v-for="tracker in trackers" class="flex items-center p-1 hover:bg-gray-100">
-        <TrackerListItem :item="tracker"/>
+        <TrackerListItem :item="tracker" @update="loadTrackers"/>
       </div>
     </div>
     <div v-else>
