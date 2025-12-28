@@ -111,7 +111,11 @@ const zoom = ref<number>(11)
         </svg>
       </button>
     </mgl-custom-control>
-    <Marker v-for="item in connectionStore.markers" :name="item.name" :coordinates="[item.long, item.lat]" @markerClick="flyTo(item)" />
+    <Marker v-for="item in connectionStore.markers"
+            :name="item.resource == null ? item.name : item.resource.name"
+            :status="item.resource == null ? '?' : item.resource.status"
+            :coordinates="[item.long, item.lat]"
+            @markerClick="flyTo(item)" />
   </mgl-map>
 </template>
 
