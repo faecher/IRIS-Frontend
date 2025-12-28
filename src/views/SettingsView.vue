@@ -7,6 +7,9 @@ import axios from "axios";
 import type {Operation} from "../models/operation.ts";
 import type {Tracker} from "../models/tracker.ts";
 import TrackerListItem from "../components/TrackerListItem.vue";
+import {useSettingsStore} from "../store/settings.ts";
+
+const settingsStore = useSettingsStore();
 
 const hasError: Ref<boolean> = ref<boolean>(false);
 const errors: Ref<string[]> = ref<string[]>([]);
@@ -235,6 +238,21 @@ onMounted(() => {
         class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none">
       Tracker und MCP-Teams zurücksetzen
     </button>
+    <h2 class="font-bold text-2xl my-4">Darstellungseinstellungen</h2>
+    <div>
+      <input
+          id="show_unassigned" type="checkbox" v-model="settingsStore.showUnassignedTrackers"
+          class="mr-2"
+      />
+      <label for="show_unassigned">Zeige Tracker auf der Karte an, die nicht mit MCP verknüpft sind</label>
+    </div>
+    <div>
+      <input
+          id="show_unassigned" type="checkbox" v-model="settingsStore.showInactiveMarkers"
+          class="mr-2"
+      />
+      <label for="show_unassigned">Zeige inaktive Tracker (Tracker im Status 6) auf der Karte an</label>
+    </div>
   </div>
 </template>
 
