@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import VueMaplibreGl from '@indoorequal/vue-maplibre-gl'
 import './style.css'
 import App from './App.vue'
 import {createPinia} from "pinia";
@@ -11,4 +12,5 @@ pinia.use(piniaPluginPersistedstate)
 const app = createApp(App);
 app.use(router);
 app.use(pinia);
+app.use(VueMaplibreGl)
 app.mount('#app')

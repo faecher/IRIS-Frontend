@@ -1,4 +1,4 @@
-import { type MarkerStatus } from '../ui/marker.ts'
+export type MarkerStatus = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export interface Tracker {
     id: number
