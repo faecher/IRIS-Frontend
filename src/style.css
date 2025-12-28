@@ -73,11 +73,3 @@
   color: white;
   background-color: #0b80bf;
 }
-
-.maplibregl-ctrl button.maplibregl-ctrl-style .maplibregl-ctrl-icon {
-  background-image: url("style.svg");
-}
-
-.maplibregl-ctrl button.maplibregl-ctrl-settings .maplibregl-ctrl-icon {
-  background-image: url("settings.svg");
-}
