@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import {computed, onBeforeUnmount, onMounted, type Ref, ref} from "vue";
+import type { Ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const props = defineProps({
   timestamp: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 })
 
-const currentTime: Ref<number> = ref(Date.now());
-let interval: any;
+const currentTime: Ref<number> = ref(Date.now())
+let interval: any
 
 function updateTime() {
-  currentTime.value = Date.now();
+  currentTime.value = Date.now()
 }
 
 onMounted(() => {
@@ -26,13 +27,14 @@ onBeforeUnmount(() => {
 const humanReadableTime = computed(() => {
   const date = new Date(props.timestamp * 1000)
   const elapsedTime = currentTime.value - date.getTime()
-  return Math.ceil(elapsedTime/60000)
+  return Math.ceil(elapsedTime / 60000)
 })
-
 </script>
 
 <template>
-  <p class="text-sm text-gray-500 select-none">Letztes Update: Vor {{ humanReadableTime }} {{ humanReadableTime < 2 ? 'Minute' : 'Minuten' }}</p>
+  <p class="text-sm text-gray-500 select-none">
+    Letztes Update: Vor {{ humanReadableTime }} {{ humanReadableTime < 2 ? 'Minute' : 'Minuten' }}
+  </p>
 </template>
 
 <style scoped>

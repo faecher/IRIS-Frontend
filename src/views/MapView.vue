@@ -1,7 +1,6 @@
 <script setup lang="ts">
-
-import Map from "../components/Map.vue";
-import TrackerList from "../components/TrackerList.vue";
+import Map from '../components/Map.vue'
+import TrackerList from '../components/TrackerList.vue'
 </script>
 
 <template>

@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import { RouterView } from "vue-router";
-import { useConnectionStore } from "./store/connection.ts";
-import { onMounted, onBeforeUnmount } from "vue";
+import { onBeforeUnmount, onMounted } from 'vue'
+import { RouterView } from 'vue-router'
+import { useConnectionStore } from './store/connection.ts'
 
-const connectionStore = useConnectionStore();
+const connectionStore = useConnectionStore()
 
 onMounted(() => {
-  connectionStore.bindEvents();
+  connectionStore.bindEvents()
 })
 
 onBeforeUnmount(() => {
-  connectionStore.clearEvents();
+  connectionStore.clearEvents()
 })
-
 </script>
 
 <template>
