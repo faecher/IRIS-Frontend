@@ -3,7 +3,6 @@ import { ref, type Ref } from "vue";
 import type { Tracker } from "../models/tracker.ts";
 import type {LngLatLike} from "maplibre-gl";
 import axios from "axios";
-import base from "../api/base.ts";
 
 export const useConnectionStore = defineStore("connection", () => {
     const isConnected: Ref<boolean> = ref(true);
@@ -14,12 +13,16 @@ export const useConnectionStore = defineStore("connection", () => {
     let interval: any;
 
     function updateData() {
-        axios.get(base.root_url + '/api/tracker/',{
+        axios.get('/api/tracker/',{
             headers: {
                 'Content-Type': 'application/json'
             },
             timeout: 500
         }).then(function (response) {
+            // Only process JSON data
+            if (response.headers["content-type"] !== "application/json") {
+                return;
+            }
             // Reload the data
             markers.value = response.data;
 
