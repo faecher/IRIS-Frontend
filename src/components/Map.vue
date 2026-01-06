@@ -12,9 +12,11 @@ import type {Tracker} from "../models/tracker.ts";
 const settingsStore = useSettingsStore();
 const connectionStore = useConnectionStore();
 
+const versatilesServerURL: string = `http://${window.location.host}`
+
 // Define the styles
 const vectorTilesStyle = colorful({
-  baseUrl: 'http://127.0.0.1:8080',
+  baseUrl: versatilesServerURL,
   language: 'de'
 })
 
