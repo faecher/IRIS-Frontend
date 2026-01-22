@@ -1,0 +1,15 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and push frontend
+        run: |
+          docker build -t ghcr.io/faecher/iris-frontend:latest .
+          docker push ghcr.io/faecher/iris-frontend:latest
