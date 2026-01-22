@@ -24,8 +24,8 @@ services:
 
   ### Backend service
   IRIS-backend:
-    image: ghcr.io/faecher/iris-backend:latest
-    container_name: IRIS-backend
+    image: ghcr.io/faecher/iris-server:latest
+    container_name: IRIS-server
     restart: unless-stopped
     volumes:
       - IRIS-data:/data ### TODO: do we need this? isn't this only for an sqlite db? could that be offloaded into the pgsql that we host anyway?
