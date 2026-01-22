@@ -1,51 +1,51 @@
-### All components for a full ... Installation
+### All components for a full IRIS Installation
 
 services:
   ### ------------------------------------------
-  ###             ... Services
+  ###             IRIS Services
   ### ------------------------------------------
 
   ### Frontend service
-  ...-frontend:
-    image: ghcr.io/your-org/tracking-frontend:latest
-    container_name: ...-frontend
+  IRIS-frontend:
+    image: ghcr.io/faecher/iris-frontend:latest
+    container_name: IRIS-frontend
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-80}:80"
     depends_on:
-      - ...-backend
+      - IRIS-backend
     networks:
-      - ...-network
+      - IRIS-network
     environment:
-      - BACKEND_HOSTNAME=...-backend
+      - BACKEND_HOSTNAME=IRIS-backend
       - BACKEND_PORT=8000
-      - TILES_HOST=...-versatiles
+      - TILES_HOST=IRIS-versatiles
       - TILES_PORT=8080
 
   ### Backend service
-  ...-backend:
-    image: ghcr.io/your-org/tracking-backend:latest
-    container_name: ...-backend
+  IRIS-backend:
+    image: ghcr.io/faecher/iris-backend:latest
+    container_name: IRIS-backend
     restart: unless-stopped
     volumes:
-      - ...-data:/data ### TODO: do we need this? isn't this only for an sqlite db? could that be offloaded into the pgsql that we host anyway?
+      - IRIS-data:/data ### TODO: do we need this? isn't this only for an sqlite db? could that be offloaded into the pgsql that we host anyway?
     networks:
-      - ...-network
+      - IRIS-network
     environment:
       - DATA_PATH=/data
 
   ### ------------------------------------------
   ###           Offline-Maps server
   ### ------------------------------------------
-  ...-versatiles:
+  IRIS-versatiles:
     image: versatiles/versatiles-frontend:latest-alpine  # with frontend
-    container_name: ...-versatiles
+    container_name: IRIS-versatiles
     restart: unless-stopped
     volumes:
       - ${PWD}:/data:ro ### mount the current directory as read-only for map data
     command: ${VERSATILES_FILE:-tiles.versatiles}
     networks:
-      - ...-network
+      - IRIS-network
 
 
 
@@ -56,12 +56,12 @@ services:
 
 
 volumes:
-  ...-data:
+  IRIS-data:
     driver: local
   versatiles-data:
     driver: local
 
 networks:
 # TODO: do we want to separate nginx and backend networks?
-  ...-network:
+  IRIS-network:
     driver: bridge
