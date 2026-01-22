@@ -17,3 +17,22 @@ The [IRIS-Server](https://github.com/faecher/IRIS-Server) provides and relays th
 #### Coming Soon<sup>TM</sup>
 - Data relay to MCP
 - Readout of TETRA Digitalfunk GPS data 
+
+
+#### Supported Devices
+- [< tracker modell hier >](https://todo.com)
+
+
+## Quick Start
+1. Install [Docker](https://www.docker.com/) or [Podman](https://podman.io/)
+2. Copy the docker-compose.yml to your machine:
+	```sh
+	wget https://raw.githubusercontent.com/faecher/IRIS-Frontend/refs/heads/main/docker-compose.yml
+	```
+3. Run with Docker / Podman:
+	```sh
+	docker compose up -d
+	# or
+	podman compose up -d
+	```
+4. Magic (Your server should be up and running. As soon as this actually works this easily, this note should be removed and replaced with how to access the UI... TODO)
