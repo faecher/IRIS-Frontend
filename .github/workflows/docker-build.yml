@@ -6,10 +6,27 @@ on:
 
 jobs:
   build-frontend:
+    name: Build and Push IRIS Frontend Docker Image
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Build and push frontend
-        run: |
-          docker build -t ghcr.io/faecher/iris-frontend:latest .
-          docker push ghcr.io/faecher/iris-frontend:latest
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - uses: actions/checkout@v3
+
+    - name: Build and push frontend
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: |
+          ghcr.io/faecher/iris-frontend:latest
+          ghcr.io/faecher/iris-frontend:${{ github.sha }}
