@@ -36,3 +36,8 @@ The [IRIS-Server](https://github.com/faecher/IRIS-Server) provides and relays th
 	podman compose up -d
 	```
 4. Magic (Your server should be up and running. As soon as this actually works this easily, this note should be removed and replaced with how to access the UI... TODO)
+
+## Security
+> [!WARNING]
+> This project is not built with security in mind and does not feature any built-in authentication or authorization for the web interface or API. Any user who can reach the service can read and modify tracker data and change server configuration.
+> Do **not** expose IRIS-Server directly to the internet or to any untrusted or shared network. If you deploy it, you **must** strictly gate access using strong external controls (for example, an authenticated reverse proxy, VPN, or mTLS) and treat the server as a fully trusted internal component only.
