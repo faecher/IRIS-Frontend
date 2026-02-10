@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MarkerStatus } from '../models/tracker.ts'
+import type { MarkerStatus } from '../models/resource.ts'
 import { MglMarker } from '@indoorequal/vue-maplibre-gl'
 
 const props = withDefaults(defineProps<{

@@ -133,8 +133,8 @@ const filteredTrackers = computed<Tracker[]>(() => {
     <Marker
       v-for="item in filteredTrackers"
       :key="item.id"
-      :name="item.resource == null ? item.name : item.resource.name"
-      :status="item.resource == null ? '?' : item.resource.status"
+      :name="item.resource?.resource.name ?? item.name"
+      :status="item.resource?.status ?? '?'"
       :coordinates="[item.long, item.lat]"
       @marker-click="flyTo(item)"
     />

@@ -4,7 +4,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 const props = defineProps({
   timestamp: {
-    type: Number,
+    type: String,
     required: true,
   },
 })
@@ -25,7 +25,7 @@ onBeforeUnmount(() => {
 })
 
 const humanReadableTime = computed(() => {
-  const date = new Date(props.timestamp * 1000)
+  const date = new Date(props.timestamp)
   const elapsedTime = currentTime.value - date.getTime()
   return Math.ceil(elapsedTime / 60000)
 })

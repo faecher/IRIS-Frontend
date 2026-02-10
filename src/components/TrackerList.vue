@@ -39,7 +39,7 @@ function flyToMarker(item: Tracker) {
               {{ tracker.name }}
             </p>
             <p v-else class="select-none">
-              {{ tracker.resource?.name }}
+              {{ tracker.resource?.resource.name }}
             </p>
             <LastUpdateIndicator :timestamp="tracker.lastUpdated" />
           </div>
