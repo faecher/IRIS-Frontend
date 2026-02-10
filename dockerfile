@@ -6,7 +6,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Stage 2: Serve with nginx (includes your config)
+# Stage 2: Serve with nginx (includes config template)
 FROM nginx:alpine
 # Copy the built Vue app
 COPY --from=builder /app/dist /usr/share/nginx/html
