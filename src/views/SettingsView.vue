@@ -39,9 +39,9 @@ const sortedTrackers = computed(() => {
 
     switch (sortCriteria.value) {
       case 'name':
-        // Use deviceEUI as fallback if name is empty
+        // Use deviceEUI as fallback if name is equal
 		// but only if both names are empty to group unnamed trackers together
-		if (!a.name && !b.name) {
+		if (a.name == b.name) {
 			valueA = a.deviceEUI
 			valueB = b.deviceEUI
 			break
@@ -58,6 +58,17 @@ const sortedTrackers = computed(() => {
         valueB = b.battery
         return valueB - valueA // Descending order for battery
       case 'resourceName':
+		// sort by name, then deviceEUI if both trackers don't have a resource
+		if (!a.resource && !b.resource) {
+			if (a.name == b.name) {
+				valueA = a.deviceEUI
+				valueB = b.deviceEUI
+				break
+			}
+			valueA = a.name
+			valueB = b.name
+			break
+		}
 		// group unassigned trackers together by using empty string as fallback for resource name
         valueA = a.resource?.resource.name ?? ''
         valueB = b.resource?.resource.name ?? ''
