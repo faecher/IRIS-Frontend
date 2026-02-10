@@ -89,15 +89,15 @@ function flyTo(item: Tracker): void {
 const filteredTrackers = computed<Tracker[]>(() => {
   if (settingsStore.showUnassignedTrackers) {
     if (settingsStore.showInactiveMarkers) {
-      return connectionStore.markers
+      return connectionStore.trackers
     }
-    return connectionStore.markers.filter(marker => marker.resource?.status !== 6)
+    return connectionStore.trackers.filter(marker => marker.resource?.status !== 6)
   }
   else {
     // The setting showInactiveTrackers has no effect here!
 
     // Show only assigned trackers (where the resource is not null)
-    return connectionStore.markers.filter(marker => marker.resource !== null)
+    return connectionStore.trackers.filter(marker => marker.resource !== null)
   }
 })
 </script>

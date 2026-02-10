@@ -33,7 +33,7 @@ function flyToMarker(item: Tracker) {
         </button>
       </div>
       <div v-if="showList" class="max-h-[93vh] overflow-y-scroll">
-        <div v-for="tracker in connectionStore.markers" :key="tracker.id" class="w-full flex pt-1 pb-1 pl-2 pr-2 hover:bg-gray-100" @click="flyToMarker(tracker)">
+        <div v-for="tracker in connectionStore.trackers" :key="tracker.id" class="w-full flex pt-1 pb-1 pl-2 pr-2 hover:bg-gray-100" @click="flyToMarker(tracker)">
           <div>
             <p v-if="tracker.resource === null" class="select-none">
               {{ tracker.name }}
