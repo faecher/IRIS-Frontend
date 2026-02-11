@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { PropType, Ref } from 'vue'
+import type { PropType } from 'vue'
 import type { Tracker } from '../models/tracker.ts'
 import type { TableauResource } from '../models/resource.ts'
 import axios from 'axios'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
   tracker: {
