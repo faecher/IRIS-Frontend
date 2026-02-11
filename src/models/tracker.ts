@@ -1,17 +1,20 @@
 import type { TableauResource } from './resource'
 
 export interface Tracker {
-  id: string
-  name: string
+	id: string
+	name: string
 
-  battery: number
-  long: number
-  lat: number
+	battery: number
+	position: Position
 
-  lastUpdated: string
-  resource: null | TableauResource
-  
-  deviceEUI: string
+	lastUpdated: string
+	resource: null | TableauResource
+
+	deviceEUI: string
 }
 
+export interface Position {
+	lon: number
+	lat: number
+}
 

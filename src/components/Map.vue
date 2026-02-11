@@ -82,7 +82,7 @@ function toggleMapStyle() {
 
 function flyTo(item: Tracker): void {
   map.value?.map?.flyTo({
-    center: [item.long, item.lat],
+    center: [item.position.lon, item.position.lat],
   })
 }
 
@@ -135,7 +135,7 @@ const filteredTrackers = computed<Tracker[]>(() => {
       :key="item.id"
       :name="item.resource?.resource.name ?? item.name"
       :status="item.resource?.status ?? '?'"
-      :coordinates="[item.long, item.lat]"
+      :coordinates="[item.position.lon, item.position.lat]"
       @marker-click="flyTo(item)"
     />
   </MglMap>
