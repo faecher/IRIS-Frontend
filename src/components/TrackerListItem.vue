@@ -33,7 +33,7 @@ watch(() => props.tracker.resource, (newResource) => {
 })
 
 
-function updateAssigment() {
+function updateAssignment() {
 	var requestRoute = `/api/tracker/assign/${props.tracker.id}`
 	if (selectedResource.value != '0') {
 		requestRoute += `/${selectedResource.value}`
@@ -110,9 +110,9 @@ function closeDialog() {
 
 		<select v-model="selectedResource"
 		class="bg-gray-50 border border-gray-400 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mr-2"
-		@change="updateAssigment"
+		@change="updateAssignment"
 		>
-		  <option :value="0">
+		  <option :value="'0'">
 			keine Zuweisung
 		  </option>
 		  <option v-for="tableauResource in props.resources" :key="tableauResource.id" :value="tableauResource.id">

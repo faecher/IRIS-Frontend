@@ -120,7 +120,7 @@ function loadMCPConfig() {
 			loadResources()
 		}
 	}).catch((e) => {
-		if (e.status == 500) {
+		if (e.response?.status == 500) {
 			addError("Fehler beim Laden der MCP-Konfiguration")
 		}
 
@@ -133,7 +133,7 @@ function loadOperations() {
 	.then((response) => {
 		operations.value = response.data
 	}).catch((e) => {
-		if (e.status == 500) {
+		if (e.response?.status == 500) {
 			addError("Fehler beim Laden der San-Dienste")
 		}
 
@@ -141,22 +141,22 @@ function loadOperations() {
 	})
 }
 
-function loadSiteplans(silent: boolean = false) {
+function loadSiteplans(muteNoOperationError: boolean = false) {
 	axios.get(`/api/mcp/siteplans`)
 	.then((response) => {
 		siteplans.value = response.data
 	}).catch((e) => {
 		// TODO: instead of errors, this should be a msg in place of the dropdown
-		if (e.status == 428 && !silent) {
+		if (e.response?.status == 428 && !muteNoOperationError) {
 			addError("Kein Sanitätsdienst ausgewählt")
 			return
 		}
-		else if (e.status == 422) {
+		else if (e.response?.status == 422) {
 			addError("Dem ausgewählten Sanitätsdienst ist kein Ort zugewiesen")
 			return
 		}
 		
-		if (e.status == 500) {
+		if (e.response?.status == 500) {
 			addError("Fehler beim Laden der Lagepläne")
 		}
 
@@ -169,7 +169,7 @@ function loadResources() {
 	.then((response) => {
 		resources.value = response.data
 	}).catch((e) => {
-		if (e.status == 500) {
+		if (e.response?.status == 500) {
 			addError("Fehler beim Laden der Ressourcen")
 		}
 
@@ -193,10 +193,10 @@ function handleMCPSubmit() {
 	clearError()
   }).catch((e) => {
 	console.log(e)
-	if (e.status === 400) {
+	if (e.response?.status === 400) {
 	  addError(e.response?.data?.detail)
 	}
-	else if (e.status === 500) {
+	else if (e.response?.status === 500) {
 		addError('Fehler beim Verbinden mit MCP')
 	}
 	else {
@@ -217,10 +217,10 @@ function handleOperationChange() {
 		loadSiteplans()
 	}).catch((e) => {
 		console.log(e)
-		if (e.status === 400) {
+		if (e.response?.status === 400) {
 		  addError(e.response?.data?.detail)
 		}
-		else if (e.status === 500) {
+		else if (e.response?.status === 500) {
 			addError('Fehler beim Setzen des Sanitätsdienstes')
 		}
 		else {
@@ -241,10 +241,10 @@ function handleSiteplanChange() {
 		// nothing to do here
 	}).catch((e) => {
 		console.log(e)
-		if (e.status === 400) {
+		if (e.response?.status === 400) {
 		  addError(e.response?.data?.detail)
 		}
-		else if (e.status === 500) {
+		else if (e.response?.status === 500) {
 			addError('Fehler beim Setzen des Lageplans')
 		}
 		else {
@@ -260,24 +260,27 @@ function handleSiteplanChange() {
 /// ------------------------------------------------
 
 function resetTrackers() {
+	const promises = []
+	
 	for (const tracker of connectionStore.trackers) {
 		if (!tracker.resource) {
 			continue
 		}
 
-		axios.post(`/api/tracker/assign/${tracker.id}`)
-		.then(() => {
-		}).catch((e) => {
+		const promise = axios.post(`/api/tracker/assign/${tracker.id}`)
+		.catch((e) => {
 			console.log(e)
 			addError('Fehler beim Zurücksetzen der Tracker-Zuweisungen')
 		})
+		
+		promises.push(promise)
 	}
 
-	// Reload tracker and resource data after reset
-	setTimeout(() => {
+	// Reload tracker and resource data after all assignments complete
+	Promise.all(promises).then(() => {
 		connectionStore.updateTrackers()
 		loadResources()
-	}, 500)
+	})
 
 	showResetConfirm.value = false
 }
@@ -553,7 +556,7 @@ onUnmounted(() => {
 		
 		<p>
 			The IRIS-Server is the backend component of IRIS. It is responsible for managing the connection to MCP, storing the tracker data and serving the API for the frontend.
-			The server is developed in Go and can be found <a href="https://github.com/faecher/IRIS-Server" class="text-blue-600 hover:underline">on Github</a>.
+			The server is developed in Go and can be found <a href="https://github.com/faecher/IRIS-Server" class="text-blue-600 hover:underline">on GitHub</a>.
 			<br>
 			Thank you to all 3rd party libraries and open source projects that made this possible!
 		</p>
@@ -569,14 +572,16 @@ onUnmounted(() => {
 		</ul>
 	</div>
 
-	<h3 class="font-bold text-gray-300 text-xl my-4">
-		IRIS-Frontend
-	</h3>
-	<p>
-		The IRIS-Frontend is the frontend component of IRIS. It is responsible for providing the user interface and interacting with the IRIS-Server API.
-		The frontend is developed in Vue.js and can be found <a href="https://github.com/faecher/IRIS-Frontend" class="text-blue-600 hover:underline">on Github</a>.
-		<br>
-		Thank you to all 3rd party libraries and open source projects that made this possible!
+	<div>
+		<h3 class="font-bold text-gray-300 text-xl my-4">
+			IRIS-Frontend
+		</h3>
+		<p>
+			The IRIS-Frontend is the frontend component of IRIS. It is responsible for providing the user interface and interacting with the IRIS-Server API.
+			The frontend is developed in Vue.js and can be found <a href="https://github.com/faecher/IRIS-Frontend" class="text-blue-600 hover:underline">on GitHub</a>.
+			<br>
+			Thank you to all 3rd party libraries and open source projects that made this possible!
+		</p>
 		<ul class="list-disc p-2 ps-5">
 			<li><a href="https://vuejs.org/" class="text-blue-600 hover:underline">Vue.js</a></li>
 			<li><a href="https://router.vuejs.org/" class="text-blue-600 hover:underline">Vue Router</a></li>
@@ -588,17 +593,16 @@ onUnmounted(() => {
 			<li><a href="https://tailwindcss.com/" class="text-blue-600 hover:underline">Tailwind CSS</a></li>
 			<li><a href="https://www.typescriptlang.org/" class="text-blue-600 hover:underline">TypeScript</a></li>
 		</ul>
-	</p>
+	</div>
 
 	<h3 class="font-bold text-gray-300 text-xl my-4">
 		Other software components
 	</h3>
-	<p>
-		<ul class="list-disc p-2 ps-5">
-			<li><a href="https://www.postgresql.org/" class="text-blue-600 hover:underline">PostgreSQL</a></li>
-			<li><a href="https://versatiles.org/" class="text-blue-600 hover:underline">Versatiles</a></li>
-		</ul>
-	</p>
+	<p>IRIS wouldn't be possible without these other components:</p>
+	<ul class="list-disc p-2 ps-5">
+		<li><a href="https://www.postgresql.org/" class="text-blue-600 hover:underline">PostgreSQL</a></li>
+		<li><a href="https://versatiles.org/" class="text-blue-600 hover:underline">Versatiles</a></li>
+	</ul>
 </div>
 
 
