@@ -302,16 +302,16 @@ onUnmounted(() => {
 
 
 <template>
-  <div class="p-5 min-w-64">
+ <div class="flex flex-col gap-4 p-5 min-w-64">
 	<RouterLink to="/">
-	  <p class="text-sm text-blue-800">
-		Zurück zur Karte
-	  </p>
+		<p class="text-sm text-blue-800">
+			Zurück zur Karte
+		</p>
 	</RouterLink>
 
 
 	<h1 class="font-bold text-5xl mt-2 mb-6">
-	  Einstellungen
+		Einstellungen
 	</h1>
 
 
@@ -330,14 +330,15 @@ onUnmounted(() => {
 	  </div>
 	</div>
 
-<div>
+<div class="bg-gray-800 rounded-lg p-4">
 	<h2 class="font-bold text-3xl mb-4"> MCP Einstellungen </h2>
 
-	<div>
+	<div class="flex gap-5 flex-col md:flex-row">
+	<div class="flex-1">
 		<h3 class="font-bold text-2xl mb-2">
 		  Verbindung
 		</h3>
-		<p class="mb-2 text-sm font-medium text-gray-900">
+		<p class="mb-2 text-sm font-medium text-gray-400">
 		  Verbindungsstatus:
 		  <span v-if="enabled" class="font-normal">Aktiv</span>
 		  <span v-else class="font-normal">Inaktiv</span>
@@ -357,64 +358,78 @@ onUnmounted(() => {
 	<!-- 
 		MARK: San-Dienste 
 	 -->
+	<div class="flex-1">
+		<div>
+			<div class="flex gap-4 items-center">
+				<h3 class="font-bold text-2xl mb-2">
+				  Sanitätsdienst
+				</h3>
+				<div class="flex items-center mb-2">
+					<input 
+						id="hide-archived-checkbox" 
+						v-model="showArchived" 
+						type="checkbox" 
+						class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+					>
+					<label for="hide-archived-checkbox" class="ms-2 text-sm font-medium text-gray-400">
+						Zeige archivierte
+					</label>
+				</div>
+			</div>
 
-
-	<div>
-		<h3 class="font-bold text-2xl mb-2">
-		  Sanitätsdienst
-		</h3>
-
-		<div v-if="operations.length === 0 || !enabled">
-		  <p class="text-gray-500">
-			Keine Sanitätsdienste gefunden!
-		  </p>
+			<div v-if="operations.length === 0 || !enabled">
+			  <p class="text-gray-500">
+				Keine Sanitätsdienste gefunden!
+			  </p>
+			</div>
+			<div v-else class="mb-4">
+			  <select
+				id="operation-select"
+				v-model="selectedOperation"
+				class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+				@change="handleOperationChange"
+			  >
+				<option v-if="selectedOperation == ''" value="" disabled>
+				  -- Bitte wählen --
+				</option>
+				<option v-for="operation in filteredOperations" :key="operation.id" :value="operation.id">
+				  {{ operation.title }}
+				</option>
+			  </select>
+			</div>
 		</div>
-		<div v-else class="mb-4">
-		  <select
-			id="operation-select"
-			v-model="selectedOperation"
-			class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-			@change="handleOperationChange"
-		  >
-			<option value="" disabled>
-			  -- Bitte wählen --
-			</option>
-			<option v-for="operation in operations" :key="operation.id" :value="operation.id">
-			  {{ operation.title }}
-			</option>
-		  </select>
+
+		<!-- 
+			MARK: Lagepläne 
+		 -->
+
+		<div>
+			<h3 class="font-bold text-2xl mb-2">
+				Lageplan
+			</h3>
+
+			<div v-if="siteplans.length === 0 || !enabled">
+				<p class="text-gray-500">
+					Keine Lagepläne gefunden!
+				</p>
+			</div>
+			<div v-else class="mb-4">
+			  <select
+				id="siteplan-select"
+				v-model="selectedSiteplan"
+				class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+				@change="handleSiteplanChange"
+			  >
+				<option v-if="selectedSiteplan == ''" value="" disabled>
+				  -- Bitte wählen --
+				</option>
+				<option v-for="siteplan in siteplans" :key="siteplan.id" :value="siteplan.id">
+				  {{ siteplan.name }}
+				</option>
+			  </select>
+			</div>
 		</div>
 	</div>
-
-	<!-- 
-		MARK: Lagepläne 
-	 -->
-
-	<div>
-		<h3 class="font-bold text-2xl mb-2">
-			Lageplan
-		</h3>
-
-		<div v-if="siteplans.length === 0 || !enabled">
-			<p class="text-gray-500">
-				Keine Lagepläne gefunden!
-			</p>
-		</div>
-		<div v-else class="mb-4">
-		  <select
-			id="siteplan-select"
-			v-model="selectedSiteplan"
-			class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-			@change="handleSiteplanChange"
-		  >
-			<option value="" disabled>
-			  -- Bitte wählen --
-			</option>
-			<option v-for="siteplan in siteplans" :key="siteplan.id" :value="siteplan.id">
-			  {{ siteplan.name }}
-			</option>
-		  </select>
-		</div>
 	</div>
 </div>
 
@@ -487,11 +502,11 @@ onUnmounted(() => {
 
 
 
-<div>
-
+<div class="bg-gray-800 rounded-lg p-4">
 	<h2 class="font-bold text-2xl my-4">
 	  Darstellungseinstellungen
 	</h2>
+
 	<div>
 	  <input
 		id="show_unassigned" v-model="settingsStore.showUnassignedTrackers" type="checkbox"
@@ -499,13 +514,20 @@ onUnmounted(() => {
 	  >
 	  <label for="show_unassigned">Zeige Tracker auf der Karte an, die nicht mit MCP verknüpft sind</label>
 	</div>
+
 	<div>
-	  <input
+		<input
 		id="show_unassigned" v-model="settingsStore.showInactiveMarkers" type="checkbox"
 		class="mr-2"
-	  >
-	  <label for="show_unassigned">Zeige inaktive Tracker (Tracker im Status 6) auf der Karte an</label>
+		>
+		<label for="show_unassigned">Zeige inaktive Tracker (Tracker im Status 6) auf der Karte an</label>
 	</div>
+</div>
+
+
+
+
+
 <div class="bg-gray-800 rounded-lg p-4">
 	<h2 class="font-bold text-2xl">
 		About
@@ -574,6 +596,9 @@ onUnmounted(() => {
 </div>
 </template>
 
-<style scoped>
 
+
+
+
+<style scoped>
 </style>
