@@ -329,7 +329,7 @@ onUnmounted(() => {
 
 	<div
 		v-if="hasError"
-		class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+		class="flex flex-col p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
 		role="alert"
 	>
 		<div>
@@ -340,6 +340,13 @@ onUnmounted(() => {
 				</li>
 			</ul>
 		</div>
+		<button
+			type="button"
+			class="mt-4 text-sm text-red-800 bg-red-200 hover:bg-red-300 focus:ring-4 focus:ring-red-300 rounded-lg px-3 py-1.5 self-start"
+			@click="clearError"
+		>
+			Fehler schließen
+		</button>
 	</div>
 
 <div class="bg-gray-800 rounded-lg p-4">
