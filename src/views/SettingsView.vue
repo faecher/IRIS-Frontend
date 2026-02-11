@@ -319,7 +319,7 @@ onUnmounted(() => {
 	</RouterLink>
 
 
-	<h1 class="font-bold text-5xl mt-2 mb-6">
+	<h1 class="font-bold text-gray-100 text-3xl">
 		Einstellungen
 	</h1>
 
@@ -340,11 +340,11 @@ onUnmounted(() => {
 	</div>
 
 <div class="bg-gray-800 rounded-lg p-4">
-	<h2 class="font-bold text-3xl mb-4"> MCP Einstellungen </h2>
+	<h2 class="font-bold text-3xl text-gray-300 mb-4"> MCP Einstellungen </h2>
 
 	<div class="flex gap-5 flex-col md:flex-row">
 	<div class="flex-1">
-		<h3 class="font-bold text-2xl mb-2">
+		<h3 class="font-bold text-gray-100 text-2xl mb-2">
 		  Verbindung
 		</h3>
 		<p class="mb-2 text-sm font-medium text-gray-400">
@@ -370,7 +370,7 @@ onUnmounted(() => {
 	<div class="flex-1">
 		<div>
 			<div class="flex gap-4 items-center">
-				<h3 class="font-bold text-2xl mb-2">
+				<h3 class="font-bold text-gray-100 text-2xl mb-2">
 				  Sanitätsdienst
 				</h3>
 				<div class="flex items-center mb-2">
@@ -413,7 +413,7 @@ onUnmounted(() => {
 		 -->
 
 		<div>
-			<h3 class="font-bold text-2xl mb-2">
+			<h3 class="font-bold text-gray-100 text-2xl mb-2">
 				Lageplan
 			</h3>
 
@@ -448,7 +448,7 @@ onUnmounted(() => {
 
 <div class="bg-gray-800 rounded-lg p-4">
 	<div class="flex justify-between items-center mb-4">
-		<h2 class="font-bold text-2xl">
+		<h2 class="font-bold text-gray-300 text-2xl">
 			Tracker-Mapping 
 		</h2>
 
@@ -512,7 +512,7 @@ onUnmounted(() => {
 
 
 <div class="bg-gray-800 rounded-lg p-4">
-	<h2 class="font-bold text-2xl my-4">
+	<h2 class="font-bold text-gray-300 text-2xl my-4">
 	  Darstellungseinstellungen
 	</h2>
 
@@ -521,15 +521,15 @@ onUnmounted(() => {
 		id="show_unassigned" v-model="settingsStore.showUnassignedTrackers" type="checkbox"
 		class="mr-2"
 	  >
-	  <label for="show_unassigned">Zeige Tracker auf der Karte an, die nicht mit MCP verknüpft sind</label>
+	  <label for="show_unassigned" class="text-gray-300">Zeige Tracker auf der Karte an, die nicht mit MCP verknüpft sind</label>
 	</div>
 
 	<div>
 		<input
-		id="show_unassigned" v-model="settingsStore.showInactiveMarkers" type="checkbox"
+		id="show_inactive" v-model="settingsStore.showInactiveMarkers" type="checkbox"
 		class="mr-2"
 		>
-		<label for="show_unassigned">Zeige inaktive Tracker (Tracker im Status 6) auf der Karte an</label>
+		<label for="show_inactive" class="text-gray-300">Zeige inaktive Tracker (Tracker im Status 6) auf der Karte an</label>
 	</div>
 </div>
 
@@ -538,7 +538,7 @@ onUnmounted(() => {
 
 
 <div class="bg-gray-800 rounded-lg p-4">
-	<h2 class="font-bold text-2xl">
+	<h2 class="font-bold text-gray-300 text-2xl">
 		About
 	</h2>
 	<p>
@@ -547,7 +547,7 @@ onUnmounted(() => {
 
 
 	<div>
-		<h3 class="font-bold text-xl my-4">
+		<h3 class="font-bold text-gray-300 text-xl my-4">
 			IRIS-Server
 		</h3>
 		
@@ -569,7 +569,7 @@ onUnmounted(() => {
 		</ul>
 	</div>
 
-	<h3 class="font-bold text-xl my-4">
+	<h3 class="font-bold text-gray-300 text-xl my-4">
 		IRIS-Frontend
 	</h3>
 	<p>
@@ -590,7 +590,7 @@ onUnmounted(() => {
 		</ul>
 	</p>
 
-	<h3 class="font-bold text-xl my-4">
+	<h3 class="font-bold text-gray-300 text-xl my-4">
 		Other software components
 	</h3>
 	<p>
