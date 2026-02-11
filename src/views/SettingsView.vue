@@ -506,7 +506,71 @@ onUnmounted(() => {
 	  >
 	  <label for="show_unassigned">Zeige inaktive Tracker (Tracker im Status 6) auf der Karte an</label>
 	</div>
-  </div>
+<div class="bg-gray-800 rounded-lg p-4">
+	<h2 class="font-bold text-2xl">
+		About
+	</h2>
+	<p>
+		IRIS (Information Relay and Integration System) is a FAECHER-Project developed information system for emergency response coordination.
+	</p>
+
+
+	<div>
+		<h3 class="font-bold text-xl my-4">
+			IRIS-Server
+		</h3>
+		
+		<p>
+			The IRIS-Server is the backend component of IRIS. It is responsible for managing the connection to MCP, storing the tracker data and serving the API for the frontend.
+			The server is developed in Go and can be found <a href="https://github.com/faecher/IRIS-Server" class="text-blue-600 hover:underline">on Github</a>.
+			<br>
+			Thank you to all 3rd party libraries and open source projects that made this possible!
+		</p>
+
+		<ul class="list-disc p-2 ps-5">
+			<li><a href="https://github.com/gin-gonic/gin" class="text-blue-600 hover:underline">Gin Web Framework</a></li>
+			<li><a href="https://github.com/jackc/pgx/v5" class="text-blue-600 hover:underline">pgx</a></li>
+			<li><a href="https://github.com/chirpstack/chirpstack/api/go/v4" class="text-blue-600 hover:underline">ChirpStack API</a></li>
+			<li><a href="https://github.com/gofrs/uuid/v5" class="text-blue-600 hover:underline">UUID</a></li>
+			<li><a href="https://github.com/swaggo/swag" class="text-blue-600 hover:underline">Swaggo</a></li>
+			<li><a href="https://grpc.io/" class="text-blue-600 hover:underline">gRPC</a></li>
+			<li><a href="https://developers.google.com/protocol-buffers" class="text-blue-600 hover:underline">Protobuf</a></li>
+		</ul>
+	</div>
+
+	<h3 class="font-bold text-xl my-4">
+		IRIS-Frontend
+	</h3>
+	<p>
+		The IRIS-Frontend is the frontend component of IRIS. It is responsible for providing the user interface and interacting with the IRIS-Server API.
+		The frontend is developed in Vue.js and can be found <a href="https://github.com/faecher/IRIS-Frontend" class="text-blue-600 hover:underline">on Github</a>.
+		<br>
+		Thank you to all 3rd party libraries and open source projects that made this possible!
+		<ul class="list-disc p-2 ps-5">
+			<li><a href="https://vuejs.org/" class="text-blue-600 hover:underline">Vue.js</a></li>
+			<li><a href="https://router.vuejs.org/" class="text-blue-600 hover:underline">Vue Router</a></li>
+			<li><a href="https://maplibre.org/" class="text-blue-600 hover:underline">MapLibre GL</a></li>
+			<li><a href="https://indoorequal.github.io/vue-maplibre-gl/" class="text-blue-600 hover:underline">Vue MapLibre GL</a></li>
+			<li><a href="https://pinia.vuejs.org/" class="text-blue-600 hover:underline">Pinia</a></li>
+			<li><a href="https://axios-http.com/" class="text-blue-600 hover:underline">Axios</a></li>
+			<li><a href="https://vitejs.dev/" class="text-blue-600 hover:underline">Vite</a></li>
+			<li><a href="https://tailwindcss.com/" class="text-blue-600 hover:underline">Tailwind CSS</a></li>
+			<li><a href="https://www.typescriptlang.org/" class="text-blue-600 hover:underline">TypeScript</a></li>
+		</ul>
+	</p>
+
+	<h3 class="font-bold text-xl my-4">
+		Other software components
+	</h3>
+	<p>
+		<ul class="list-disc p-2 ps-5">
+			<li><a href="https://www.postgresql.org/" class="text-blue-600 hover:underline">PostgreSQL</a></li>
+			<li><a href="https://versatiles.org/" class="text-blue-600 hover:underline">Versatiles</a></li>
+		</ul>
+	</p>
+</div>
+
+
 </div>
 </template>
 
