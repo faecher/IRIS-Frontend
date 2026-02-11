@@ -30,6 +30,7 @@ const siteplans: Ref<Siteplan[]> = ref<Siteplan[]>([])
 const resources: Ref<TableauResource[]> = ref<TableauResource[]>([])
 const editingTrackerId: Ref<string | null> = ref<string | null>(null)
 const sortCriteria: Ref<'name' | 'deviceEUI' | 'battery' | 'resourceName'> = ref('name')
+const showArchived: Ref<boolean> = ref<boolean>(false)
 
 // Computed property for sorted trackers
 const sortedTrackers = computed(() => {
@@ -77,6 +78,14 @@ const sortedTrackers = computed(() => {
 
     return valueA < valueB ? -1 : valueA > valueB ? 1 : 0
   })
+})
+
+// Computed property for filtered operations
+const filteredOperations = computed(() => {
+  if (showArchived.value) {
+    return operations.value
+  }
+  return operations.value.filter(op => !op.archived)
 })
 
 function addError(msg: string) {
@@ -316,18 +325,18 @@ onUnmounted(() => {
 
 
 	<div
-	  v-if="hasError"
-	  class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
-	  role="alert"
+		v-if="hasError"
+		class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+		role="alert"
 	>
-	  <div>
-		<span class="font-medium">Ein Fehler ist aufgetreten!</span>
-		<ul class="mt-1.5 list-disc list-inside">
-		  <li v-for="error in errors" :key="error">
-			{{ error }}
-		  </li>
-		</ul>
-	  </div>
+		<div>
+			<span class="font-medium">Ein Fehler ist aufgetreten!</span>
+			<ul class="mt-1.5 list-disc list-inside">
+				<li v-for="error in errors" :key="error">
+					{{ error }}
+				</li>
+			</ul>
+		</div>
 	</div>
 
 <div class="bg-gray-800 rounded-lg p-4">
