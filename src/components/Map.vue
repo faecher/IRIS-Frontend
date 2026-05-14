@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { StyleSpecification } from 'maplibre-gl'
+import type { Map as MaplibreMap, StyleSpecification } from 'maplibre-gl'
 import type { Tracker } from '../models/tracker.ts'
 import { MglMap, MglNavigationControl } from '@indoorequal/vue-maplibre-gl'
 import { colorful } from '@versatiles/style'
@@ -50,7 +50,7 @@ const osmStyle: StyleSpecification = {
   ],
 }
 
-const map = ref(null)
+const map = ref<{ map?: MaplibreMap } | null>(null)
 const center = ref<[number, number]>([8.4, 49])
 const zoom = ref<number>(11)
 
