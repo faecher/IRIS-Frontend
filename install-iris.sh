@@ -19,12 +19,15 @@ ensure_swarm() {
 	echo "Docker Swarm is active."
 }
 
-recreate_secret() {
+ensure_secret() {
   local name="$1" value="$2"
-  echo "Creating secret: $name: $value"
 
-  docker secret rm "$name" >/dev/null 2>&1 || true
-  printf '%s' "$value" | docker secret create "$name" -
+  if docker secret inspect "$name" >/dev/null 2>&1; then
+    echo "Secret exists: $name"
+  else
+    echo "Creating secret: $name"
+    printf '%s' "$value" | docker secret create "$name" - >/dev/null
+  fi
 
 }
 
@@ -33,6 +36,8 @@ create_db_init_script() {
   cat > "$INIT_SCRIPT_PATH" <<'EOF'
 #!/usr/bin/env sh
 set -eu
+
+echo "[initdb] creating/updating DB roles..." >&2
 
 IRIS_SECRET_PATH="/run/secrets/iris_db_password"
 CHIRPSTACK_SECRET_PATH="/run/secrets/chirpstack_db_password"
@@ -66,7 +71,7 @@ DECLARE
   v_chirp_pass text := current_setting('app.chirp_pass');
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'iris') THEN
-	EXECUTE format('CREATE ROLE iris LOGIN PASSWORD %L', v_chirp_pass);
+	EXECUTE format('CREATE ROLE iris LOGIN PASSWORD %L', v_iris_pass);
   ELSE
 	EXECUTE format('ALTER ROLE iris LOGIN PASSWORD %L', v_iris_pass);
   END IF;
@@ -79,6 +84,7 @@ BEGIN
 END
 $$;
 SQL
+echo "[initdb] role setup done" >&2
 EOF
   chmod 755 "$INIT_SCRIPT_PATH"
 }
@@ -89,8 +95,8 @@ echo "Downloading docker-compose.yml from $COMPOSE_URL..."
 wget -O "$COMPOSE_FILE" "$COMPOSE_URL"
 create_db_init_script
 
-recreate_secret "iris_db_password" "$(gen_secret)"
-recreate_secret "chirpstack_db_password" "$(gen_secret)"
-recreate_secret "postgres_db_password" "$(gen_secret)"
+ensure_secret "iris_db_password" "$(gen_secret)"
+ensure_secret "chirpstack_db_password" "$(gen_secret)"
+ensure_secret "postgres_db_password" "$(gen_secret)"
 docker stack deploy -c "$COMPOSE_FILE" "$STACK"
 docker stack services "$STACK"
