@@ -1,4 +1,5 @@
 ### All components for a full IRIS Installation
+# Commented out env vars are examples of additional configuration options that can be set with their default values.
 
 secrets:
   iris_db_password:
@@ -45,17 +46,32 @@ services:
   ### Backend service
   IRIS-server:
     image: ghcr.io/faecher/iris-server:latest
+    ports:
+      - "8080:8080"
     secrets:
       - iris_db_password
     networks:
       - IRIS-network
     environment:
+      # SERVER_ADDRESS: "0.0.0.0" # Port is 8080
+      # SERVER_READ_TIMEOUT: 10 # seconds
+      # SERVER_WRITE_TIMEOUT: 10 # seconds
+      # SERVER_IDLE_TIMEOUT: 2 # minutes
+      # SERVER_MAX_HEADER_BYTES: 1048576 # 1 MB
+
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USER: iris
-      DB_PASSWORD_FILE: /run/secrets/iris_db_password
+      # DB_PASSWORD: iris # Will be preferred over DB_PASSWORD_FROM_FILE if both are set
+      DB_PASSWORD_FROM_FILE: /run/secrets/iris_db_password
+      # DB_NAME: iris
+      # DB_SSLMODE: disable
+      DB_MAX_RETRIES: 5
+      # DB_RETRY_INTERVAL: 5
+
+      # MCP_RESOURCE_UPDATE: 5 # MCP resource update interval in seconds
     deploy:
-      replicas: 2
+      replicas: 1 # Currently not verified to work with multiple replicas
       restart_policy:
         condition: on-failure
       update_config:
@@ -86,7 +102,7 @@ services:
       - IRIS-network
     volumes:
       - ./configuration/postgresql/initdb:/docker-entrypoint-initdb.d:ro
-      - pgsql-data:/var/lib/postgresql/data
+      - pgsql-data:/var/lib/postgresql
     deploy:
       replicas: 1
       restart_policy:
