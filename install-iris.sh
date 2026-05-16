@@ -83,6 +83,13 @@ BEGIN
   END IF;
 END
 $$;
+
+SELECT 'CREATE DATABASE iris OWNER iris'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'iris') \gexec
+
+SELECT 'CREATE DATABASE chirpstack OWNER chirpstack'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'chirpstack') \gexec
+
 SQL
 echo "[initdb] role setup done" >&2
 EOF
