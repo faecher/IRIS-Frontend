@@ -1,0 +1,121 @@
+### All components for a full IRIS Installation
+
+secrets:
+  iris_db_password:
+    name: iris_db_password
+    external: true
+  postgres_db_password:
+    external: true
+  chirpstack_db_password:
+    external: true
+
+  
+
+services:
+  ### ------------------------------------------
+  ###             IRIS Services
+  ### ------------------------------------------
+
+  ### Frontend service
+  IRIS-frontend:
+    image: ghcr.io/faecher/iris-frontend:latest
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    networks:
+      - IRIS-network
+    environment:
+      BACKEND_HOSTNAME: IRIS-server
+      BACKEND_PORT: 8080
+      TILES_HOST: versatiles
+      TILES_PORT: 8080
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 5s
+        order: stop-first
+
+  ### Backend service
+  IRIS-server:
+    image: ghcr.io/faecher/iris-server:latest
+    secrets:
+      - iris_db_password
+    networks:
+      - IRIS-network
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: iris
+      DB_PASSWORD_FILE: /run/secrets/iris_db_password
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        delay: 5s
+        order: stop-first
+
+
+  ### ------------------------------------------
+  ###             PostgreSQL server
+  ### ------------------------------------------
+  postgres:
+    image: postgres:18-alpine
+    secrets:
+      - postgres_db_password
+      - iris_db_password
+      - chirpstack_db_password
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_db_password
+    networks:
+      - IRIS-network
+    volumes:
+      - ./configuration/postgresql/initdb:/docker-entrypoint-initdb.d:ro
+      - pgsql-data:/var/lib/postgresql/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+
+  ### ------------------------------------------
+  ###           Offline-Maps server
+  ### ------------------------------------------
+  versatiles:
+    image: versatiles/versatiles-frontend:latest-alpine  # with frontend
+    volumes:
+      - ${PWD}:/data:ro ### mount the current directory as read-only for map data
+    command: ${VERSATILES_FILE:-tiles.versatiles}
+    networks:
+      - IRIS-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+
+
+volumes:
+  pgsql-data:
+    driver: local
+  versatiles-data:
+    driver: local
+
+networks:
+  IRIS-network:
+    driver: overlay
