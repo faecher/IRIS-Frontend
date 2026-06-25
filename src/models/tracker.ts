@@ -7,7 +7,7 @@ export interface Tracker {
 	battery: number
 	position: Position
 
-	lastUpdated: string
+	lastUpdate: string
 	resource: null | TableauResource
 
 	deviceEUI: string
