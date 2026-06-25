@@ -4,6 +4,7 @@ import type { Tracker } from '../models/tracker.ts'
 import type { TableauResource } from '../models/resource.ts'
 import axios from 'axios'
 import { computed, ref, watch } from 'vue'
+import BatteryIndicator from './BatteryIndicator.vue'
 
 const props = defineProps({
   tracker: {
@@ -100,8 +101,8 @@ function closeDialog() {
 				<div class="font-semibold text-white text-xl leading-none hover:cursor-pointer"  @click="openEditDialog">
 					{{ tracker.name || "Tracker ohne Namen" }}
 				</div> 
-				<div>
-					{{ tracker.battery }}%
+				<div class="flex items-center gap-0">
+					<BatteryIndicator :value="tracker.battery" />
 				</div>
 			</div>
 			<p class="text-gray-400 text-sm">{{ tracker.deviceEUI }}</p>
