@@ -21,6 +21,7 @@ const errors: Ref<string[]> = ref<string[]>([])
 
 const api_key: Ref<string> = ref<string>('')
 const url: Ref<string> = ref<string>('')
+const delete_markers_on_unassign: Ref<boolean> = ref<boolean>(false)
 const enabled: Ref<boolean> = ref<boolean>(false)
 const selectedOperation: Ref<string> = ref<string>('')
 const selectedSiteplan: Ref<string> = ref<string>('')
@@ -350,11 +351,11 @@ onUnmounted(() => {
 	</div>
 
 <div class="bg-gray-800 rounded-lg p-4">
-	<h2 class="font-bold text-3xl text-gray-300 mb-4"> MCP Einstellungen </h2>
+	<h2 class="font-bold text-2xl text-gray-300 mb-4"> MCP Einstellungen </h2>
 
 	<div class="flex gap-5 flex-col md:flex-row">
 	<div class="flex-1">
-		<h3 class="font-bold text-gray-100 text-2xl mb-2">
+		<h3 class="font-bold text-gray-100 text-xl mb-2">
 		  Verbindung
 		</h3>
 		<p class="mb-2 text-sm font-medium text-gray-400">
@@ -365,11 +366,22 @@ onUnmounted(() => {
 		<form @submit.prevent="handleMCPSubmit">
 		  <StringInput id="url" v-model="url" label="Server-URL" placeholder="https://127.0.0.1:443" />
 		  <StringInput id="api_key" v-model="api_key" label="API-Key" type="password" />
+		  <div class="flex items-center gap-2 mb-4">
+			<label for="delete_markers_on_unassign" class="form-label">
+				Marker bei Zuweisungsentfernung löschen
+			</label>
+			<input 
+				id="delete_markers_on_unassign" 
+				v-model="delete_markers_on_unassign" 
+				type="checkbox" 
+				class="form-checkbox"
+			/>
+		  </div>
 		  <button
 			type="submit"
 			class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 focus:outline-none"
 		  >
-			Mit MCP verbinden
+			Speichern und Verbinden
 		  </button>
 		</form>
 	</div>
@@ -380,7 +392,7 @@ onUnmounted(() => {
 	<div class="flex-1">
 		<div>
 			<div class="flex gap-4 items-center">
-				<h3 class="font-bold text-gray-100 text-2xl mb-2">
+				<h3 class="font-bold text-gray-100 text-xl mb-2">
 				  Sanitätsdienst
 				</h3>
 				<div class="flex items-center mb-2">
@@ -423,7 +435,7 @@ onUnmounted(() => {
 		 -->
 
 		<div>
-			<h3 class="font-bold text-gray-100 text-2xl mb-2">
+			<h3 class="font-bold text-gray-100 text-xl mb-2">
 				Lageplan
 			</h3>
 
@@ -522,7 +534,7 @@ onUnmounted(() => {
 
 
 <div class="bg-gray-800 rounded-lg p-4">
-	<h2 class="font-bold text-gray-300 text-2xl my-4">
+	<h2 class="font-bold text-gray-300 text-2xl mb-4">
 	  Darstellungseinstellungen
 	</h2>
 
@@ -548,7 +560,7 @@ onUnmounted(() => {
 
 
 <div class="bg-gray-800 rounded-lg p-4">
-	<h2 class="font-bold text-gray-300 text-2xl">
+	<h2 class="font-bold text-gray-300 text-2xl mb-4">
 		About
 	</h2>
 	<p>
