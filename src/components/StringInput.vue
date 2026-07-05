@@ -16,6 +16,10 @@ defineProps({
     type: String,
     default: '',
   },
+  type: {
+    type: String,
+    default: 'text',
+  },
 })
 
 const text = defineModel({ type: String, required: true })
@@ -25,7 +29,7 @@ const text = defineModel({ type: String, required: true })
   <div class="mb-6">
     <label :for="id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ label }}</label>
     <input
-      :id="id" v-model="text" type="text" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+      :id="id" v-model="text" :type="type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
     focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
     dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       :placeholder="placeholder"

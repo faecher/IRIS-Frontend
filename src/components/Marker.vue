@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { MarkerStatus } from '../models/tracker.ts'
+import { computed } from 'vue'
+import type { MarkerStatus } from '../models/resource.ts'
 import { MglMarker } from '@indoorequal/vue-maplibre-gl'
 
 const props = withDefaults(defineProps<{
@@ -12,6 +13,9 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits(['markerClick'])
+
+const knownStatuses = new Set<number>([1, 2, 3, 4, 5, 6, 7, 8, 9])
+const isUnknownStatus = computed(() => typeof props.status !== 'number' || !knownStatuses.has(props.status))
 </script>
 
 <template>
@@ -32,7 +36,7 @@ const emit = defineEmits(['markerClick'])
                     'marker-s7': props.status === 7,
                     'marker-s8': props.status === 8,
                     'marker-s9': props.status === 9,
-                    'marker-unknown': ![1, 2, 3, 4, 5, 6, 7, 8, 9].includes(props.status) }"
+                    'marker-unknown': isUnknownStatus }"
         >
           <p>{{ props.status }}</p>
         </div>

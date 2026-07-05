@@ -1,67 +1,65 @@
-### All components for a full IRIS Installation
-
 services:
-  ### ------------------------------------------
-  ###             IRIS Services
-  ### ------------------------------------------
 
   ### Frontend service
   IRIS-frontend:
     image: ghcr.io/faecher/iris-frontend:latest
-    container_name: IRIS-frontend
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-80}:80"
-    depends_on:
-      - IRIS-backend
     networks:
       - IRIS-network
     environment:
-      - BACKEND_HOSTNAME=IRIS-backend
-      - BACKEND_PORT=8000
-      - TILES_HOST=IRIS-versatiles
-      - TILES_PORT=8080
+      BACKEND_HOSTNAME: IRIS-server
+      BACKEND_PORT: 8080
+      TILES_HOST: versatiles
+      TILES_PORT: 8080
 
   ### Backend service
-  IRIS-backend:
+  IRIS-server:
     image: ghcr.io/faecher/iris-server:latest
-    container_name: IRIS-server
     restart: unless-stopped
-    volumes:
-      - IRIS-data:/data ### TODO: do we need this? isn't this only for an sqlite db? could that be offloaded into the pgsql that we host anyway?
+    ports:
+      - "8080:8080"
     networks:
       - IRIS-network
     environment:
-      - DATA_PATH=/data
+      # SERVER_ADDRESS: "0.0.0.0" # Port is 8080
+      # SERVER_READ_TIMEOUT: 10 # seconds
+      # SERVER_WRITE_TIMEOUT: 10 # seconds
+      # SERVER_IDLE_TIMEOUT: 2 # minutes
+      # SERVER_MAX_HEADER_BYTES: 1048576 # 1 MB
 
-  ### ------------------------------------------
-  ###           Offline-Maps server
-  ### ------------------------------------------
-  IRIS-versatiles:
-    image: versatiles/versatiles-frontend:latest-alpine  # with frontend
-    container_name: IRIS-versatiles
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: iris
+      DB_PASSWORD: secret # Will be preferred over DB_PASSWORD_FROM_FILE if both are set
+      # DB_PASSWORD_FROM_FILE: /run/secrets/iris_db_password
+      # DB_NAME: iris
+      # DB_SSLMODE: disable
+      DB_MAX_RETRIES: 5
+      # DB_RETRY_INTERVAL: 5
+
+      # MCP_RESOURCE_UPDATE: 5 # MCP resource update interval in seconds
+
+      # If Auth-Token is set, the token will take priority over email/password for authentication.
+      # TRACCAR_HOST: http://localhost:80
+      # TRACCAR_EMAIL: testmail@test.com
+      # TRACCAR_PASSWORD: 123456
+      # TRACCAR_AUTH_TOKEN: 1234
+      # TRACCAR_AUTH_TIMEOUT: 10
+
+  postgres:
+    image: postgres:18-alpine
     restart: unless-stopped
-    volumes:
-      - ${PWD}:/data:ro ### mount the current directory as read-only for map data
-    command: ${VERSATILES_FILE:-tiles.versatiles}
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: secret
     networks:
       - IRIS-network
-
-
-
-  # TODO: add pgsql and chirpstack services
-  # Chirpstack: https://github.com/chirpstack/chirpstack-docker/blob/master/docker-compose.yml
-  # we use http push, so so mqtt is not needed
-
-
-
-volumes:
-  IRIS-data:
-    driver: local
-  versatiles-data:
-    driver: local
+    volumes:
+      - postgres-data:/var/lib/postgresql
 
 networks:
-# TODO: do we want to separate nginx and backend networks?
   IRIS-network:
-    driver: bridge
+    driver: overlay

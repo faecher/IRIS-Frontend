@@ -1,8 +1,6 @@
 export interface Operation {
-  archived: boolean
-  uid: string
+  id: string
   title: string
-  id: number
   active: boolean
-  selected: boolean
+  archived: boolean
 }

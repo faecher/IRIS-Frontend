@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { StyleSpecification } from 'maplibre-gl'
+import type { Map as MaplibreMap, StyleSpecification } from 'maplibre-gl'
 import type { Tracker } from '../models/tracker.ts'
 import { MglMap, MglNavigationControl } from '@indoorequal/vue-maplibre-gl'
 import { colorful } from '@versatiles/style'
@@ -50,7 +50,7 @@ const osmStyle: StyleSpecification = {
   ],
 }
 
-const map = ref(null)
+const map = ref<{ map?: MaplibreMap } | null>(null)
 const center = ref<[number, number]>([8.4, 49])
 const zoom = ref<number>(11)
 
@@ -82,22 +82,22 @@ function toggleMapStyle() {
 
 function flyTo(item: Tracker): void {
   map.value?.map?.flyTo({
-    center: [item.long, item.lat],
+    center: [item.position.lon, item.position.lat],
   })
 }
 
 const filteredTrackers = computed<Tracker[]>(() => {
   if (settingsStore.showUnassignedTrackers) {
     if (settingsStore.showInactiveMarkers) {
-      return connectionStore.markers
+      return connectionStore.trackers
     }
-    return connectionStore.markers.filter(marker => marker.resource?.status !== 6)
+    return connectionStore.trackers.filter(marker => marker.resource?.status !== 6)
   }
   else {
     // The setting showInactiveTrackers has no effect here!
 
     // Show only assigned trackers (where the resource is not null)
-    return connectionStore.markers.filter(marker => marker.resource !== null)
+    return connectionStore.trackers.filter(marker => marker.resource !== null)
   }
 })
 </script>
@@ -133,9 +133,9 @@ const filteredTrackers = computed<Tracker[]>(() => {
     <Marker
       v-for="item in filteredTrackers"
       :key="item.id"
-      :name="item.resource == null ? item.name : item.resource.name"
-      :status="item.resource == null ? '?' : item.resource.status"
-      :coordinates="[item.long, item.lat]"
+      :name="item.resource?.resource.name ?? item.name"
+      :status="item.resource?.status ?? '?'"
+      :coordinates="[item.position.lon, item.position.lat]"
       @marker-click="flyTo(item)"
     />
   </MglMap>

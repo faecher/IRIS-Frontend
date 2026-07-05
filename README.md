@@ -13,10 +13,10 @@ The [IRIS-Server](https://github.com/faecher/IRIS-Server) provides and relays th
 - Assign trackers to teams
 - Battery overview of all connected trackers
 - Monitor your team location in real-time
+- Data relay to MCP
 
 #### Coming Soon<sup>TM</sup>
-- Data relay to MCP
-- Readout of TETRA Digitalfunk GPS data 
+- Readout of Traccar Trackers GPS data 
 
 
 #### Supported Devices
@@ -24,16 +24,14 @@ The [IRIS-Server](https://github.com/faecher/IRIS-Server) provides and relays th
 
 
 ## Quick Start
-1. Install [Docker](https://www.docker.com/) or [Podman](https://podman.io/)
-2. Copy the docker-compose.yml to your machine:
+1. Install [Docker](https://www.docker.com/) on your machine
+2. Download the installation-script:
 	```sh
-	wget https://raw.githubusercontent.com/faecher/IRIS-Frontend/refs/heads/main/docker-compose.yml
+	wget https://raw.githubusercontent.com/faecher/IRIS-Frontend/refs/heads/main/install-iris.sh
 	```
-3. Run with Docker / Podman:
+3. Run the install script:
 	```sh
-	docker compose up -d
-	# or
-	podman compose up -d
+	./install-iris.sh
 	```
 4. Magic (Your server should be up and running. As soon as this actually works this easily, this note should be removed and replaced with how to access the UI... TODO)
 

@@ -1,20 +1,20 @@
-export type MarkerStatus = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+import type { TableauResource } from './resource'
 
 export interface Tracker {
-  id: number
-  deviceEUI: string
-  name: string
-  battery: number
-  long: number
-  lat: number
-  lastUpdated: number
-  resource: null | Resource
+	id: string
+	name: string
+
+	battery: number
+	position: Position
+
+	lastUpdate: string
+	resource: null | TableauResource
+
+	deviceEUI: string
 }
 
-export interface Resource {
-  id: number
-  uid: string
-  name: string
-  type: string
-  status: MarkerStatus
+export interface Position {
+	lon: number
+	lat: number
 }
+
