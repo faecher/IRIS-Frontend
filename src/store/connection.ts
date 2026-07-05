@@ -31,5 +31,5 @@ export const useConnectionStore = defineStore('connection', () => {
     clearInterval(interval)
   }
 
-  return { isConnected, bindEvents, clearEvents, updateTrackers, trackers: trackers, flyTo }
+  return { isConnected, bindEvents, clearEvents, updateTrackers, trackers, flyTo }
 })
