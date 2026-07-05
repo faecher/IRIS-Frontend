@@ -4,37 +4,37 @@ This document contains the licenses for all third-party libraries used in the IR
 
 ## Production Dependencies
 
-### Vue.js (v3.5.13)
+### Vue.js
 - **License:** MIT
 - **Copyright:** Copyright (c) 2013-present, Yuxi (Evan) You
 - **Repository:** https://github.com/vuejs/core
 - **License Text:** https://github.com/vuejs/core/blob/main/LICENSE
 
-### Pinia (v3.0.2)
+### Pinia
 - **License:** MIT
 - **Copyright:** Copyright (c) 2019-present Eduardo San Martin Morote
 - **Repository:** https://github.com/vuejs/pinia
 - **License Text:** https://github.com/vuejs/pinia/blob/v2/LICENSE
 
-### Pinia Plugin Persistedstate (v4.2.0)
+### Pinia Plugin Persistedstate
 - **License:** MIT
 - **Copyright:** Copyright (c) 2020-present Eduardo San Martin Morote
 - **Repository:** https://github.com/prazdevs/pinia-plugin-persistedstate
 - **License Text:** https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/LICENSE
 
-### Vue Router (v4.5.1)
+### Vue Router
 - **License:** MIT
 - **Copyright:** Copyright (c) 2013-present Evan You
 - **Repository:** https://github.com/vuejs/router
 - **License Text:** https://github.com/vuejs/router/blob/main/LICENSE
 
-### Axios (v1.12.0)
+### Axios
 - **License:** MIT
 - **Copyright:** Copyright (c) 2014-present Matt Zabriskie
 - **Repository:** https://github.com/axios/axios
 - **License Text:** https://github.com/axios/axios/blob/v1.x/LICENSE
 
-### MapLibre GL JS (v5.5.0)
+### MapLibre GL JS
 - **License:** BSD-3-Clause
 - **Copyright:** Copyright (c) 2020, MapLibre contributors
 - **Repository:** https://github.com/maplibre/maplibre-gl-js
@@ -66,53 +66,53 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE.
 ```
 
-### @indoorequal/vue-maplibre-gl (v8.4.2)
+### @indoorequal/vue-maplibre-gl
 - **License:** MIT
 - **Repository:** https://github.com/indoorequal/vue-maplibre-gl
 - **License Text:** https://github.com/indoorequal/vue-maplibre-gl/blob/main/LICENSE
 
-### @versatiles/style (v5.6.0)
+### @versatiles/style
 - **License:** MIT
 - **Repository:** https://github.com/versatiles-org/versatiles-style
 - **License Text:** https://github.com/versatiles-org/versatiles-style/blob/main/LICENSE.md
 
 ## Development Dependencies
 
-### Vite (v7.1.11)
+### Vite
 - **License:** MIT
 - **Copyright:** Copyright (c) 2019-present, Yuxi (Evan) You and Vite contributors
 - **Repository:** https://github.com/vitejs/vite
 - **License Text:** https://github.com/vitejs/vite/blob/main/LICENSE
 
-### TypeScript (v5.8.3)
+### TypeScript
 - **License:** Apache-2.0
 - **Copyright:** Copyright (c) Microsoft Corporation
 - **Repository:** https://github.com/microsoft/TypeScript
 - **License Text:** https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt
 
-### Tailwind CSS (v4.1.7)
+### Tailwind CSS
 - **License:** MIT
 - **Copyright:** Copyright (c) Tailwind Labs, Inc.
 - **Repository:** https://github.com/tailwindlabs/tailwindcss
 - **License Text:** https://github.com/tailwindlabs/tailwindcss/blob/master/LICENSE
 
-### ESLint (v9.35.0)
+### ESLint
 - **License:** MIT
 - **Copyright:** Copyright OpenJS Foundation and other contributors
 - **Repository:** https://github.com/eslint/eslint
 - **License Text:** https://github.com/eslint/eslint/blob/main/LICENSE
 
-### @vitejs/plugin-vue (v6.0.3)
+### @vitejs/plugin-vue
 - **License:** MIT
 - **Repository:** https://github.com/vitejs/vite-plugin-vue
 - **License Text:** https://github.com/vitejs/vite-plugin-vue/blob/main/LICENSE
 
-### @tailwindcss/vite (v4.1.18)
+### @tailwindcss/vite
 - **License:** MIT
 - **Repository:** https://github.com/tailwindlabs/tailwindcss
 - **License Text:** https://github.com/tailwindlabs/tailwindcss/blob/master/LICENSE
 
-### vue-tsc (v3.1.8)
+### vue-tsc
 - **License:** MIT
 - **Repository:** https://github.com/vuejs/language-tools
 - **License Text:** https://github.com/vuejs/language-tools/blob/master/LICENSE
@@ -144,5 +144,3 @@ SOFTWARE.
 ```
 
 ---
-
-*This file was last updated on February 11, 2026. For the most current license information, please refer to the respective repositories listed above.*
