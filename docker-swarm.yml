@@ -70,6 +70,13 @@ services:
       # DB_RETRY_INTERVAL: 5
 
       # MCP_RESOURCE_UPDATE: 5 # MCP resource update interval in seconds
+
+      # If Auth-Token is set, the token will take priority over email/password for authentication.
+      # TRACCAR_HOST: http://localhost:80
+      # TRACCAR_EMAIL: testmail@test.com
+      # TRACCAR_PASSWORD: 123456
+      # TRACCAR_AUTH_TOKEN: 1234 
+      # TRACCAR_AUTH_TIMEOUT: 10
     deploy:
       replicas: 1 # Currently not verified to work with multiple replicas
       restart_policy:
