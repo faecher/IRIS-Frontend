@@ -46,5 +46,77 @@ const isUnknownStatus = computed(() => typeof props.status !== 'number' || !know
 </template>
 
 <style scoped>
+.marker-box {
+  position: absolute;
+  border-radius: 0.4em;
+  display: flex;
+  align-items: baseline;
+  background-color: #33333d;
+  box-shadow: 5px 10px rgba(106, 106, 106, 0.29);
+}
 
+.marker-box:after {
+  content: '';
+  position: absolute;
+  bottom: 0.1em;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border: 0.625em solid transparent;
+  border-top-color: #33333d;
+  border-bottom: 0;
+  margin-left: -0.625em;
+  margin-bottom: -0.625em;
+}
+
+.marker-text {
+  color: #dcdcdc;
+  background-color: #33333d;
+}
+
+.marker-status {
+  /* Make status indicator bold */
+  font-weight: bold;
+  border-bottom-right-radius: 0.4em;
+  border-top-right-radius: 0.4em;
+}
+
+.marker-s1 {
+  background-color: #00ff33;
+}
+
+.marker-s2 {
+  color: white;
+  background-color: #005d2b;
+}
+
+.marker-s3 {
+  background-color: #fff100;
+}
+
+.marker-s4 {
+  background-color: #ff0000;
+}
+
+.marker-s5 {
+  background-color: #c9c9d0;
+}
+
+.marker-s6 {
+  background-color: #7c7c7c;
+}
+
+.marker-s7 {
+  background-color: #df07a7;
+}
+
+.marker-s8 {
+  color: white;
+  background-color: #71055c;
+}
+
+.marker-unknown {
+  color: white;
+  background-color: #0b80bf;
+}
 </style>
