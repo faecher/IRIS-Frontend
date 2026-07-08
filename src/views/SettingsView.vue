@@ -99,11 +99,6 @@ function clearError() {
   errors.value = []
 }
 
-/// ------------------------------------------------
-/// MCP State Configuration
-/// MARK: MCP State
-/// ------------------------------------------------
-
 function loadMCPConfig() {
   axios.get(`/api/mcp/config`)
     .then((response) => {
@@ -258,11 +253,6 @@ function handleSiteplanChange() {
       }
     })
 }
-
-/// ------------------------------------------------
-/// Tracker Configuration
-/// MARK: Tracker Config
-/// ------------------------------------------------
 
 function resetTrackers() {
   const promises = []

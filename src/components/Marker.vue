@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import type { MarkerStatus } from '../models/resource.ts'
 import { MglMarker } from '@indoorequal/vue-maplibre-gl'
+import { computed } from 'vue'
 
 const props = withDefaults(defineProps<{
   coordinates?: [number, number]
