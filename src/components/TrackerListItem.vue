@@ -35,7 +35,7 @@ watch(() => props.tracker.resource, (newResource) => {
 
 function updateAssignment() {
   let requestRoute = `/api/tracker/assign/${props.tracker.id}`
-  if (selectedResource.value != '0') {
+  if (selectedResource.value !== '0') {
     requestRoute += `/${selectedResource.value}`
   }
 
@@ -95,21 +95,20 @@ function closeDialog() {
     </div>
   </dialog>
 
-  <div class="flex flex-col p-3 bg-gray-800 border border-gray-600 rounded-lg gap-2 h-full">
+  <div class="flex flex-col p-3 bg-gray-200 dark:bg-gray-800 border border-gray-600 rounded-lg gap-2 h-full">
     <div>
       <!-- TODO: edit icon hinter den namen -> nehmen wir eif. phosphor icons? -->
       <div class="flex justify-between items-top">
-        <div class="font-semibold text-white text-xl leading-none hover:cursor-pointer" @click="openEditDialog">
+        <div class="font-semibold text-black dark:text-white text-xl leading-none hover:cursor-pointer" @click="openEditDialog">
           {{ tracker.name || "Tracker ohne Namen" }}
         </div>
         <div class="flex items-center gap-0">
           <BatteryIndicator :value="tracker.battery" />
         </div>
       </div>
-      <p class="text-gray-400 text-sm">
+      <p class="text-gray-600 dark:text-gray-400 text-sm">
         {{ tracker.deviceEUI }}
       </p>
-      <!-- <div class="text-white">Debug-Data: {{ props.tracker }}</div> -->
     </div>
 
     <select
