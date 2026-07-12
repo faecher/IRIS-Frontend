@@ -446,40 +446,38 @@ onUnmounted(() => {
     </div>
 
     <div class="bg-gray-200 dark:bg-gray-800 rounded-lg p-4">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="font-bold text-black dark:text-gray-300 text-2xl">
+      <div class="flex flex-col md:flex-row justify-between mb-2">
+        <h2 class="font-bold text-black dark:text-gray-300 text-2xl mb-2">
           Tracker-Mapping
         </h2>
-
-        <div class="flex gap-4 items-center">
-          <div class="bg-gray-300 dark:bg-gray-700 rounded-lg ps-3 flex items-center gap-2">
-            Sortieren nach
-            <select
-              v-model="sortCriteria"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
-            >
-              <option value="name">
-                Name
-              </option>
-              <option value="deviceEUI">
-                Device EUI
-              </option>
-              <option value="battery">
-                Batteriestand
-              </option>
-              <option value="resourceName">
-                Name des Einsatzmittels
-              </option>
-            </select>
-          </div>
-
-          <button
-            class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none"
-            @click="showResetConfirm = true"
+        <div class="grow" />
+        <div class="bg-gray-300 dark:bg-gray-700 rounded-lg ps-3 flex items-center gap-2 mb-2 md:mx-2">
+          Sortieren nach
+          <select
+            v-model="sortCriteria"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2 grow"
           >
-            Alle Zuweisungen zurücksetzen
-          </button>
+            <option value="name">
+              Name
+            </option>
+            <option value="deviceEUI">
+              Device EUI
+            </option>
+            <option value="battery">
+              Batteriestand
+            </option>
+            <option value="resourceName">
+              Name des Einsatzmittels
+            </option>
+          </select>
         </div>
+
+        <button
+          class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none mb-2"
+          @click="showResetConfirm = true"
+        >
+          Alle Zuweisungen zurücksetzen
+        </button>
 
         <dialog v-if="showResetConfirm" class="rounded-lg shadow-xl p-4 bg-gray-700 border-gray-600" open>
           <h3 class="text-lg font-semibold mb-4 text-white">
@@ -496,7 +494,7 @@ onUnmounted(() => {
         </dialog>
       </div>
 
-      <div v-if="connectionStore.trackers.length > 0" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 mb-4">
+      <div v-if="connectionStore.trackers.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 mb-4">
         <TrackerListItem
           v-for="tracker in sortedTrackers"
           :key="tracker.id"
