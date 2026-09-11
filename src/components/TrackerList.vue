@@ -37,7 +37,7 @@ function flyToMarker(item: Tracker) {
           </svg>
         </button>
       </div>
-      <div v-if="showList" class="max-h-[93vh] overflow-y-scroll">
+      <div v-if="showList" class="max-h-[93vh] scrollbar-auto overflow-y-auto">
         <div
           v-for="tracker in connectionStore.trackers.sort((a, b) => a.name.localeCompare(b.name))"
           :key="tracker.id"
