@@ -3,11 +3,15 @@ import type { Map as MaplibreMap, StyleSpecification } from 'maplibre-gl'
 import type { Tracker } from '../models/tracker.ts'
 import { MglMap, MglNavigationControl } from '@indoorequal/vue-maplibre-gl'
 import { colorful } from '@versatiles/style'
+import { setWorkerUrl } from 'maplibre-gl'
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useConnectionStore } from '../store/connection.ts'
 import { useSettingsStore } from '../store/settings.ts'
 import Marker from './Marker.vue'
 import 'maplibre-gl/dist/maplibre-gl.css'
+
+setWorkerUrl(workerUrl)
 
 const settingsStore = useSettingsStore()
 const connectionStore = useConnectionStore()
