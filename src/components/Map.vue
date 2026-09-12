@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { Map as MaplibreMap, StyleSpecification } from 'maplibre-gl'
+import type { Map as MaplibreMap, MapMouseEvent, StyleSpecification } from 'maplibre-gl'
+import type { Run } from '../models/run.ts'
 import type { Tracker } from '../models/tracker.ts'
 import { MglMap, MglNavigationControl } from '@indoorequal/vue-maplibre-gl'
 import { colorful } from '@versatiles/style'
@@ -8,7 +9,9 @@ import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useConnectionStore } from '../store/connection.ts'
 import { useSettingsStore } from '../store/settings.ts'
+import EntityDetailsPanel from './EntityDetailsPanel.vue'
 import Marker from './Marker.vue'
+import RunPlacementWarning from './RunPlacementWarning.vue'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 setWorkerUrl(workerUrl)
@@ -18,7 +21,6 @@ const connectionStore = useConnectionStore()
 
 const versatilesServerURL: string = `http://${window.location.host}`
 
-// Define the styles
 const vectorTilesStyle = colorful({
   baseUrl: versatilesServerURL,
   language: 'de',
@@ -57,38 +59,20 @@ const osmStyle: StyleSpecification = {
 const map = ref<{ map?: MaplibreMap } | null>(null)
 const center = ref<[number, number]>([8.4, 49])
 const zoom = ref<number>(11)
+const mouseCoordinates = ref<[number, number]>([8.4, 49])
+const placementTarget = ref<{ runId: string } | null>(null)
+const selectedEntity = ref<{ id: string; kind: 'tracker' | 'run' } | null>(null)
 
-onMounted(() => {
-  // Note: Deep watching is required as vue does not detect the changes in the list
-  watch(() => connectionStore.flyTo, () => {
-    if (connectionStore.flyTo.length > 0) {
-      map.value?.map?.flyTo({
-        center: connectionStore.flyTo[0],
-      })
-      // Remove the first element from the list
-      connectionStore.flyTo.shift()
-    }
-  }, { deep: true })
-})
+function isKnownRun(run: Run) {
+  return run.unsetPosition === false
+}
 
 const mapStyle = computed(() => {
   if (settingsStore.useVectorTiles) {
     return vectorTilesStyle
   }
-  else {
-    return osmStyle
-  }
+  return osmStyle
 })
-
-function toggleMapStyle() {
-  settingsStore.useVectorTiles = !settingsStore.useVectorTiles
-}
-
-function flyTo(item: Tracker): void {
-  map.value?.map?.flyTo({
-    center: [item.position.lon, item.position.lat],
-  })
-}
 
 const filteredTrackers = computed<Tracker[]>(() => {
   // Keep this code! The list of trackers must be sorted by name to be passed to the marker or rendering and UI glitches occur!
@@ -115,13 +99,129 @@ const filteredTrackers = computed<Tracker[]>(() => {
     }
     return trackers.filter(marker => marker.resource?.status !== 6)
   }
-  else {
-    // The setting showInactiveTrackers has no effect here!
 
     // Show only assigned trackers (where the resource is not null)
     return trackers.filter(marker => marker.resource !== null)
   }
+)
+
+const visibleRuns = computed(() => connectionStore.runs.filter(run => isKnownRun(run)))
+const unknownRuns = computed(() => connectionStore.runs.filter(run => !isKnownRun(run)))
+
+const selectedTracker = computed(() => {
+  const selected = selectedEntity.value
+  if (!selected || selected.kind !== 'tracker') {
+    return null
+  }
+
+  return connectionStore.trackers.find(tracker => tracker.id === selected.id) ?? null
 })
+
+const selectedRun = computed(() => {
+  const selected = selectedEntity.value
+  if (!selected || selected.kind !== 'run') {
+    return null
+  }
+
+  return connectionStore.runs.find(run => run.id === selected.id) ?? null
+})
+
+const selectedDetailsEntity = computed(() => selectedTracker.value ?? selectedRun.value)
+const placementRun = computed(() => placementTarget.value
+  ? connectionStore.runs.find(run => run.id === placementTarget.value?.runId) ?? null
+  : null,
+)
+const isPlacingRun = computed(() => placementRun.value !== null)
+
+onMounted(() => {
+  connectionStore.updateTrackers()
+  connectionStore.updateRuns()
+
+  // Use MapLibre API directly for click handler (more reliable than vue event binding)
+  const mapInstance = map.value?.map
+  if (mapInstance) {
+    mapInstance.on('click', (event) => {
+      console.log('MapLibre click event fired at:', event.lngLat.lng, event.lngLat.lat)
+      if (!placementRun.value) {
+        console.log('No placement run set')
+        return
+      }
+      const { lng, lat } = event.lngLat
+      console.log('Updating run position for', placementRun.value.id, 'to', lat, lng)
+      connectionStore.updateRunPosition(placementRun.value.id, lat, lng)
+        .then(() => {
+          console.log('Position updated successfully')
+          connectionStore.updateRuns()
+          placementTarget.value = null
+        })
+        .catch((error) => {
+          console.error('Failed to update run position:', error)
+        })
+    })
+  }
+
+  watch(() => connectionStore.flyTo, () => {
+    if (connectionStore.flyTo.length > 0) {
+      map.value?.map?.flyTo({
+        center: connectionStore.flyTo[0],
+      })
+      connectionStore.flyTo.shift()
+    }
+  }, { deep: true })
+})
+
+function toggleMapStyle() {
+  settingsStore.useVectorTiles = !settingsStore.useVectorTiles
+}
+
+function flyToTracker(item: Tracker): void {
+  map.value?.map?.flyTo({
+    center: [item.position.lon, item.position.lat],
+  })
+}
+
+function flyToRun(run: Run): void {
+  if (!isKnownRun(run)) {
+    return
+  }
+
+  map.value?.map?.flyTo({
+    center: [run.long, run.lat],
+  })
+}
+
+function handleTrackerClick(item: Tracker) {
+  selectedEntity.value = { id: item.id, kind: 'tracker' }
+  flyToTracker(item)
+}
+
+function handleRunClick(item: Run) {
+  selectedEntity.value = { id: item.id, kind: 'run' }
+  flyToRun(item)
+}
+
+function startRunPlacement(run: Run) {
+  console.log('Starting run placement for:', run.id)
+  placementTarget.value = { runId: run.id }
+  if (!mouseCoordinates.value) {
+    mouseCoordinates.value = [center.value[0], center.value[1]]
+  }
+}
+
+function closeDetails() {
+  selectedEntity.value = null
+}
+
+function repositionSelected() {
+  if (selectedRun.value) {
+    startRunPlacement(selectedRun.value)
+  }
+}
+
+function handleMapMouseMove(event: { event: MapMouseEvent }) {
+  const { lng, lat } = event.event.lngLat
+  mouseCoordinates.value = [lng, lat]
+}
 </script>
 
 <template>
@@ -131,6 +231,7 @@ const filteredTrackers = computed<Tracker[]>(() => {
     :zoom="zoom"
     :center="center"
     height="100vh"
+    @map:mousemove="handleMapMouseMove"
   >
     <MglNavigationControl position="top-right" />
     <mgl-custom-control position="bottom-right">
@@ -145,6 +246,7 @@ const filteredTrackers = computed<Tracker[]>(() => {
         </router-link>
       </button>
     </mgl-custom-control>
+
     <mgl-custom-control position="bottom-right">
       <button class="maplibregl-ctrl-icon" @click="toggleMapStyle">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="m-0.5">
@@ -152,17 +254,62 @@ const filteredTrackers = computed<Tracker[]>(() => {
         </svg>
       </button>
     </mgl-custom-control>
+
+    <mgl-custom-control position="bottom-left" class="bg-important-transparent p-2">
+      <div class="pointer-events-none flex max-w-[calc(100vw-1rem)] flex-col gap-2 bg-transparent" color="transparent">
+        <RunPlacementWarning
+          v-for="run in unknownRuns"
+          :key="run.id"
+          :run="run"
+          :active="placementTarget?.runId === run.id"
+          @place="startRunPlacement(run)"
+        />
+
+        <EntityDetailsPanel
+          v-if="selectedDetailsEntity"
+          :entity="selectedDetailsEntity"
+          @close="closeDetails"
+          @reposition="repositionSelected"
+        />
+      </div>
+    </mgl-custom-control>
+
+    <Marker
+      v-if="isPlacingRun"
+      :coordinates="[mouseCoordinates[0], mouseCoordinates[1]]"
+      kind="run"
+      name="Neue Position"
+      status="PIN"
+      :selected="true"
+    />
     <Marker
       v-for="item in filteredTrackers"
       :key="item.id"
+      kind="tracker"
       :name="item.resource?.resource.name ?? item.name"
       :status="item.resource?.status ?? '?'"
-      :coordinates="[item.position.lon, item.position.lat]"
-      @marker-click="flyTo(item)"
+      :coordinates=" (item.resource?.unsetPosition ?? true) ? [item.position.lon, item.position.lat] : [item.resource?.position?.lon ?? 0, item.resource?.position?.lat ?? 0]"
+      :selected="selectedEntity?.kind === 'tracker' && selectedEntity.id === item.id"
+      @marker-click="handleTrackerClick(item)"
+    />
+    <Marker
+      v-for="item in visibleRuns"
+      :key="item.id"
+      kind="run"
+      name="Einsatz"
+      :status="item.nr.toString()"
+      :subtitle="item.operation.title"
+      :coordinates="[item.long, item.lat]"
+      :selected="selectedEntity?.kind === 'run' && selectedEntity.id === item.id"
+      @marker-click="handleRunClick(item)"
     />
   </MglMap>
 </template>
 
 <style>
 @import "maplibre-gl/dist/maplibre-gl.css";
+
+.bg-important-transparent {
+  background-color: transparent !important;
+}
 </style>

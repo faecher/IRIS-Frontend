@@ -7,38 +7,59 @@ const props = withDefaults(defineProps<{
   coordinates?: [number, number]
   name: string
   status?: MarkerStatus | string
+  kind?: 'tracker' | 'run'
+  selected?: boolean
+  subtitle?: string
 }>(), {
   coordinates: () => [0, 0],
   status: '?',
+  kind: 'tracker',
+  selected: false,
+  subtitle: '',
 })
 
 const emit = defineEmits(['markerClick'])
 
 const knownStatuses = new Set<number>([1, 2, 3, 4, 5, 6, 7, 8, 9])
 const isUnknownStatus = computed(() => typeof props.status !== 'number' || !knownStatuses.has(props.status))
+const isRunMarker = computed(() => props.kind === 'run')
 </script>
 
 <template>
   <MglMarker :coordinates="props.coordinates">
     <template #marker>
-      <div class="marker-box cursor-pointer bottom-0 -translate-x-1/2" @click="emit('markerClick')">
+      <div
+        class="marker-box cursor-pointer bottom-0 -translate-x-1/2"
+        :class="{ 'marker-box-run': isRunMarker, 'marker-box-selected': props.selected }"
+        @click.stop="emit('markerClick')"
+      >
+        <div v-if="isRunMarker"
+          class="marker-status pl-1 pr-1 pt-0.5 pb-0.5 marker-run"
+        >
+          <p>{{props.status}}</p>
+        </div>
         <div class="marker-text ml-1 mr-1 p-0.5 text-nowrap">
           <p>{{ props.name }}</p>
+          <p v-if="props.subtitle" class="marker-subtitle">
+            {{ props.subtitle }}
+          </p>
         </div>
-        <div
+        <div v-if="!isRunMarker"
           class="marker-status pl-1 pr-1 pt-0.5 pb-0.5"
-          :class="{ 'marker-s1': props.status === 1,
-                    'marker-s2': props.status === 2,
-                    'marker-s3': props.status === 3,
-                    'marker-s4': props.status === 4,
-                    'marker-s5': props.status === 5,
-                    'marker-s6': props.status === 6,
-                    'marker-s7': props.status === 7,
-                    'marker-s8': props.status === 8,
-                    'marker-s9': props.status === 9,
-                    'marker-unknown': isUnknownStatus }"
+          :class="{
+            'marker-s1': props.status === 1,
+            'marker-s2': props.status === 2,
+            'marker-s3': props.status === 3,
+            'marker-s4': props.status === 4,
+            'marker-s5': props.status === 5,
+            'marker-s6': props.status === 6,
+            'marker-s7': props.status === 7,
+            'marker-s8': props.status === 8,
+            'marker-s9': props.status === 9,
+            'marker-unknown': isUnknownStatus,
+          }"
         >
-          <p>{{ props.status }}</p>
+          <p>{{props.status}}</p>
         </div>
       </div>
     </template>
@@ -53,6 +74,15 @@ const isUnknownStatus = computed(() => typeof props.status !== 'number' || !know
   align-items: baseline;
   background-color: #33333d;
   box-shadow: 5px 10px rgba(106, 106, 106, 0.29);
+}
+
+.marker-box-run {
+  background-color: #66324a;
+}
+
+.marker-box-selected {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35), 5px 10px rgba(106, 106, 106, 0.29);
+  margin-bottom: 0.5em;
 }
 
 .marker-box:after {
@@ -72,6 +102,17 @@ const isUnknownStatus = computed(() => typeof props.status !== 'number' || !know
 .marker-text {
   color: #dcdcdc;
   background-color: #33333d;
+}
+
+.marker-box-run .marker-text {
+  color: #f1f1f1;
+  background-color: unset;
+}
+
+.marker-subtitle {
+  color: #9ca3af;
+  font-size: 0.7rem;
+  line-height: 1;
 }
 
 .marker-status {
@@ -118,5 +159,10 @@ const isUnknownStatus = computed(() => typeof props.status !== 'number' || !know
 .marker-unknown {
   color: white;
   background-color: #0b80bf;
+}
+
+.marker-run {
+  color: #eff6ff;
+  background-color: #0f766e;
 }
 </style>
