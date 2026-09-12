@@ -91,17 +91,35 @@ function flyTo(item: Tracker): void {
 }
 
 const filteredTrackers = computed<Tracker[]>(() => {
+  // Keep this code! The list of trackers must be sorted by name to be passed to the marker or rendering and UI glitches occur!
+  // Sorting by id or other attributes does not help, as only attributes used for rendering the markers influence it.
+  const trackers = [...connectionStore.trackers].sort((a, b) => {
+    // If one item has no resource assigned
+    if (!a.resource || !b.resource) {
+      // Use device EUIs if the names are the same
+      if (a.name === b.name) {
+        return a.deviceEUI < b.deviceEUI ? -1 : a.deviceEUI > b.deviceEUI ? 1 : 0
+      }
+      else {
+        return a.name < b.name ? -1 : a.name > b.name ? 1 : 0
+      }
+    }
+    else {
+      return (a.resource?.resource.name ?? '') < (b.resource?.resource.name ?? '') ? -1 : (a.resource?.resource.name ?? '') > (b.resource?.resource.name ?? '') ? 1 : 0
+    }
+  })
+
   if (settingsStore.showUnassignedTrackers) {
     if (settingsStore.showInactiveMarkers) {
-      return connectionStore.trackers
+      return trackers
     }
-    return connectionStore.trackers.filter(marker => marker.resource?.status !== 6)
+    return trackers.filter(marker => marker.resource?.status !== 6)
   }
   else {
     // The setting showInactiveTrackers has no effect here!
 
     // Show only assigned trackers (where the resource is not null)
-    return connectionStore.trackers.filter(marker => marker.resource !== null)
+    return trackers.filter(marker => marker.resource !== null)
   }
 })
 </script>
