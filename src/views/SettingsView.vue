@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import type { AxiosError } from 'axios'
 import type { Ref } from 'vue'
 import type { Operation } from '../models/operation.ts'
 import type { TableauResource } from '../models/resource.ts'
 import type { Siteplan } from '../models/siteplan.ts'
-
 import axios from 'axios'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
@@ -280,6 +280,13 @@ function resetTrackers() {
   showResetConfirm.value = false
 }
 
+function resetRuns() {
+  axios.delete('/api/runs/')
+    .catch((e: AxiosError) => {
+      console.log(e)
+    })
+}
+
 let resourceUpdateInterval: number | null = null
 
 onMounted(() => {
@@ -440,6 +447,12 @@ onUnmounted(() => {
                 </option>
               </select>
             </div>
+            <button
+              class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none mb-2"
+              @click="resetRuns"
+            >
+              Einsätze zurücksetzen
+            </button>
           </div>
         </div>
       </div>
