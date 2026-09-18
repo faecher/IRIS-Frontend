@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { MarkerStatus } from '../models/resource.ts'
-import { MglMarker } from '@indoorequal/vue-maplibre-gl'
 import { computed } from 'vue'
+import { useEmitAsProps } from '../utils.ts'
+import { ClickableMarker } from './index.ts'
 
 const props = withDefaults(defineProps<{
   coordinates?: [number, number]
@@ -9,16 +10,16 @@ const props = withDefaults(defineProps<{
   status?: MarkerStatus | string
   kind?: 'tracker' | 'run'
   selected?: boolean
-  subtitle?: string
+  draggable?: boolean
 }>(), {
   coordinates: () => [0, 0],
   status: '?',
   kind: 'tracker',
   selected: false,
-  subtitle: '',
+  draggable: false,
 })
 
-const emit = defineEmits(['markerClick'])
+const emits = defineEmits(['click', 'dragstart', 'drag', 'dragend'])
 
 const knownStatuses = new Set<number>([1, 2, 3, 4, 5, 6, 7, 8, 9])
 const isUnknownStatus = computed(() => typeof props.status !== 'number' || !knownStatuses.has(props.status))
@@ -26,25 +27,23 @@ const isRunMarker = computed(() => props.kind === 'run')
 </script>
 
 <template>
-  <MglMarker :coordinates="props.coordinates">
+  <ClickableMarker :coordinates="props.coordinates" v-bind="useEmitAsProps(emits)" :draggable="props.draggable">
     <template #marker>
       <div
         class="marker-box cursor-pointer bottom-0 -translate-x-1/2"
-        :class="{ 'marker-box-run': isRunMarker, 'marker-box-selected': props.selected }"
-        @click.stop="emit('markerClick')"
+        :class="{ 'marker-box-run': isRunMarker }"
       >
-        <div v-if="isRunMarker"
-          class="marker-status pl-1 pr-1 pt-0.5 pb-0.5 marker-run"
+        <div
+          v-if="isRunMarker"
+          class="marker-run-status pl-1 pr-1 pt-0.5 pb-0.5 marker-run"
         >
-          <p>{{props.status}}</p>
+          <p>{{ props.status }}</p>
         </div>
         <div class="marker-text ml-1 mr-1 p-0.5 text-nowrap">
           <p>{{ props.name }}</p>
-          <p v-if="props.subtitle" class="marker-subtitle">
-            {{ props.subtitle }}
-          </p>
         </div>
-        <div v-if="!isRunMarker"
+        <div
+          v-if="!isRunMarker"
           class="marker-status pl-1 pr-1 pt-0.5 pb-0.5"
           :class="{
             'marker-s1': props.status === 1,
@@ -59,11 +58,11 @@ const isRunMarker = computed(() => props.kind === 'run')
             'marker-unknown': isUnknownStatus,
           }"
         >
-          <p>{{props.status}}</p>
+          <p>{{ props.status }}</p>
         </div>
       </div>
     </template>
-  </MglMarker>
+  </ClickableMarker>
 </template>
 
 <style scoped>
@@ -77,12 +76,11 @@ const isRunMarker = computed(() => props.kind === 'run')
 }
 
 .marker-box-run {
-  background-color: #66324a;
+  background-color: #9a0000;
 }
 
-.marker-box-selected {
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35), 5px 10px rgba(106, 106, 106, 0.29);
-  margin-bottom: 0.5em;
+.marker-box-run:after {
+  border-top-color: #9a0000 !important;
 }
 
 .marker-box:after {
@@ -109,17 +107,18 @@ const isRunMarker = computed(() => props.kind === 'run')
   background-color: unset;
 }
 
-.marker-subtitle {
-  color: #9ca3af;
-  font-size: 0.7rem;
-  line-height: 1;
-}
-
 .marker-status {
   /* Make status indicator bold */
   font-weight: bold;
   border-bottom-right-radius: 0.4em;
   border-top-right-radius: 0.4em;
+}
+
+.marker-run-status {
+  /* Make status indicator bold */
+  font-weight: bold;
+  border-bottom-left-radius: 0.4em;
+  border-top-left-radius: 0.4em;
 }
 
 .marker-s1 {
