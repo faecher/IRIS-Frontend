@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { AxiosError } from 'axios'
-import type { MapLibreEvent, Map as MaplibreMap, StyleSpecification } from 'maplibre-gl'
+import type { Map as MaplibreMap, MapMouseEvent, StyleSpecification } from 'maplibre-gl'
 import type { Run } from '../models/run.ts'
 import type { Tracker } from '../models/tracker.ts'
 import { MglMap, MglNavigationControl } from '@indoorequal/vue-maplibre-gl'
@@ -131,7 +131,6 @@ const selectedRun = computed(() => {
   return connectionStore.runs.find(run => run.id === selected.id) ?? null
 })
 
-const selectedDetailsEntity = computed(() => selectedTracker.value ?? selectedRun.value)
 const placementRun = computed(() => placementTarget.value
   ? connectionStore.runs.find(run => run.id === placementTarget.value?.runId) ?? null
   : null,
@@ -270,8 +269,8 @@ function repositionSelected() {
   }
 }
 
-function handleMapMouseMove(event: MapLibreEvent) {
-  const { lng, lat } = event.event.lngLat
+function handleMapMouseMove(event: { event: MapMouseEvent }) {
+  const { lng, lat } = event.event?.lngLat
   mouseCoordinates.value = [lng, lat]
 }
 </script>
@@ -320,11 +319,17 @@ function handleMapMouseMove(event: MapLibreEvent) {
         />
 
         <EntityDetailsPanel
-          v-if="selectedDetailsEntity"
-          :entity="selectedDetailsEntity"
+          v-if="selectedTracker"
+          :entity="selectedTracker"
           @close="closeDetails"
           @reposition="repositionSelected"
-          @reset="resetTrackerPositionOverride(selectedDetailsEntity)"
+          @reset="resetTrackerPositionOverride(selectedTracker)"
+        />
+        <EntityDetailsPanel
+          v-else-if="selectedRun"
+          :entity="selectedRun"
+          @close="closeDetails"
+          @reposition="repositionSelected"
         />
       </div>
     </mgl-custom-control>
