@@ -1,5 +1,3 @@
-import type { Position } from './tracker'
-
 export type MarkerStatus = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
 export interface TableauResource {
@@ -7,7 +5,8 @@ export interface TableauResource {
   resource: Resource
   status: MarkerStatus
 
-  position: Position
+  lat: number
+  lon: number
   unsetPosition: boolean
 }
 
