@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "dev-host": "vite --host",
+    "check": "vue-tsc -b",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "build": "vue-tsc -b && vite build",
